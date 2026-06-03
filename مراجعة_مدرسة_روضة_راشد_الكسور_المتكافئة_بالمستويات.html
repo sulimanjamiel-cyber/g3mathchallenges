@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدرسة روضة راشد للامتحان التحصيلي - الكسور المتكافئة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e1b4b; /* Deep Indigo */
+            --primary-dark: #0f0e26;
+            --accent: #0ea5e9; /* Sky Blue */
+            --accent-dark: #0284c7;
+            --level1-color: #10b981; /* Emerald Green */
+            --level2-color: #f59e0b; /* Amber */
+            --level3-color: #ef4444; /* Rose Red */
+            --bg-gradient: linear-gradient(135deg, #e0f2fe, #f0fdf4);
+            --card-shadow: 0 15px 35px -5px rgba(30, 27, 75, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --radius: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Almarai', 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg-gradient);
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            direction: rtl;
+        }
+
+        /* Header styling */
+        .main-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light, #312e81));
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(30, 27, 75, 0.3);
+            border-bottom-left-radius: var(--radius);
+            border-bottom-right-radius: var(--radius);
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-header h1 {
+            margin: 0 0 0.5rem;
+            font-size: 2.2rem;
+            font-weight: 900;
+            font-family: 'Tajawal', sans-serif;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .main-header p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Screen Wrapper */
+        .screen {
+            display: none;
+            width: 100%;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Dashboard Map Layout */
+        .map-banner {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.8rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            border: 2.5px solid #cbd5e1;
+        }
+
+        .map-banner h2 {
+            margin: 0 0 0.6rem;
+            color: var(--primary);
+            font-size: 1.8rem;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 800;
+        }
+
+        .map-banner p {
+            margin: 0;
+            color: #475569;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .level-card {
+            background: var(--glass-bg);
+            border-radius: var(--radius);
+            padding: 2.2rem 1.6rem;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            border: 3.5px solid #cbd5e1;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .level-card.unlocked:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 45px -10px rgba(30, 27, 75, 0.25);
+        }
+
+        .level-card.locked {
+            opacity: 0.65;
+            cursor: not-allowed;
+            background: #e2e8f0;
+        }
+
+        .level-card.level-1 { border-color: var(--level1-color); }
+        .level-card.level-2 { border-color: var(--level2-color); }
+        .level-card.level-3 { border-color: var(--level3-color); }
+
+        .level-badge {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .level-card.level-1 .level-badge { background: var(--level1-color); }
+        .level-card.level-2 .level-badge { background: var(--level2-color); }
+        .level-card.level-3 .level-badge { background: var(--level3-color); }
+        .level-card.locked .level-badge { background: #94a3b8; }
+
+        .level-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .level-desc {
+            font-size: 1rem;
+            color: #475569;
+            margin: 0;
+            line-height: 1.6;
+            flex: 1;
+            font-weight: bold;
+        }
+
+        .level-status {
+            font-weight: 800;
+            font-size: 1.05rem;
+            padding: 0.5rem 1.4rem;
+            border-radius: 999px;
+            margin-top: 0.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .level-card.level-1 .level-status { background: #d1fae5; color: #065f46; }
+        .level-card.level-2 .level-status { background: #fef3c7; color: #92400e; }
+        .level-card.level-3 .level-status { background: #fee2e2; color: #991b1b; }
+        .level-card.locked .level-status { background: #cbd5e1; color: #475569; }
+
+        .lock-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 1.6rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        /* Action Buttons */
+        .btn {
+            font-size: 1.3rem;
+            font-weight: 800;
+            padding: 1rem 2.4rem;
+            border-radius: 18px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-dark); }
+        .btn-success { background: var(--level1-color); color: white; }
+        .btn-success:hover { background: #059669; }
+        .btn-secondary { background: #64748b; color: white; }
+        .btn-secondary:hover { background: #475569; }
+        .btn-warning { background: var(--level2-color); color: white; }
+        .btn-warning:hover { background: #d97706; }
+
+        /* Game Header Bar */
+        .game-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 1.2rem 1.8rem;
+            border-radius: var(--radius);
+            border: 2.5px solid #cbd5e1;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.8rem;
+        }
+
+        .game-bar-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .game-bar-stats {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .stat-badge {
+            font-size: 1.2rem;
+            font-weight: 800;
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 0.5rem 1.2rem;
+            border-radius: 14px;
+            border: 2px solid #bfdbfe;
+        }
+
+        /* Question Layout */
+        .q-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2.2rem;
+            box-shadow: var(--card-shadow);
+            border: 2.5px solid #cbd5e1;
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+
+        .q-badge {
+            position: absolute;
+            top: -14px;
+            right: 28px;
+            font-size: 1rem;
+            font-weight: 800;
+            color: white;
+            padding: 0.4rem 1.4rem;
+            border-radius: 999px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+
+        .q-text {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.6;
+            margin-bottom: 1.8rem;
+            text-align: center;
+        }
+
+        /* Options Buttons Layout (MCQ styled label overrides) */
+        #q-input-area label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.65rem !important;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 14px 24px !important;
+            border: 2.5px solid #cbd5e1 !important;
+            border-radius: 16px !important;
+            background: white !important;
+            width: 100% !important;
+            max-width: 420px !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+            transition: all 0.2s ease !important;
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            text-align: right;
+        }
+
+        #q-input-area label:hover {
+            border-color: var(--accent) !important;
+            background: #f0f9ff !important;
+            transform: translateY(-2px);
+        }
+
+        #q-input-area label:has(input[type="radio"]:checked) {
+            border-color: var(--accent) !important;
+            background: #e0f2fe !important;
+            color: #0369a1 !important;
+            box-shadow: 0 4px 10px rgba(14, 165, 233, 0.15);
+        }
+
+        #q-input-area label.correct {
+            border-color: var(--level1-color) !important;
+            background: #d1fae5 !important;
+            color: #065f46 !important;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15) !important;
+        }
+
+        #q-input-area label.incorrect {
+            border-color: var(--level3-color) !important;
+            background: #fee2e2 !important;
+            color: #991b1b !important;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.15) !important;
+        }
+
+        #q-input-area label input[type="radio"] {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--accent);
+            cursor: pointer;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        /* SVG drawings container styles */
+        svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Feedback styling */
+        .feedback {
+            margin-top: 1.8rem;
+            padding: 1.4rem 2rem;
+            border-radius: 18px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fb-ok { background: #d1fae5; color: #065f46; border: 3px solid #34d399; }
+        .fb-err { background: #fee2e2; color: #991b1b; border: 3px solid #f87171; }
+
+        /* Game Footer Actions */
+        .game-footer {
+            display: flex;
+            justify-content: flex-start;
+            gap: 1.2rem;
+            margin-top: 1.2rem;
+            padding-top: 1.2rem;
+            border-top: 2.5px solid #e2e8f0;
+        }
+
+        /* Score summary cards */
+        .summary-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            border: 3.5px solid #cbd5e1;
+            max-width: 600px;
+            width: 100%;
+            margin: 2rem auto;
+        }
+
+        .summary-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 0 0 1.2rem;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .summary-score-badge {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--accent-dark);
+            background: #eff6ff;
+            padding: 1.4rem 3.5rem;
+            border-radius: 22px;
+            display: inline-block;
+            border: 3.5px solid #bfdbfe;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 5px 15px rgba(2, 132, 199, 0.1);
+        }
+
+        /* Formats dropdown select style */
+        select {
+            width: 90px;
+            height: 55px;
+            text-align: center;
+            text-align-last: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border: 3px solid #cbd5e1;
+            border-radius: 12px;
+            outline: none;
+            background: #f8fafc;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        }
+
+        select.valid {
+            border-color: var(--level1-color) !important;
+            background-color: #d1fae5 !important;
+            color: #065f46 !important;
+        }
+
+        select.invalid {
+            border-color: var(--level3-color) !important;
+            background-color: #fee2e2 !important;
+            color: #991b1b !important;
+        }
+
+        /* Confetti canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <h1>🏆 تحدي الفرسان: مراجعة الكسور المتكافئة</h1>
+            <p>الصف الثالث - مدرسة روضة راشد للامتحان التحصيلي</p>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- 1. MAP DASHBOARD SCREEN -->
+        <section id="screen-map" class="screen active">
+            <div class="map-banner">
+                <h2>أهلاً بك يا بطل الرياضيات في تحدي الكسور المتكافئة! 🗺️</h2>
+                <p>تجاوز كل مستوى بنجاح (بنسبة 80% أو أكثر) لفتح المستوى التالي والوصول لمرتبة العباقرة!</p>
+            </div>
+
+            <div class="levels-grid">
+                <!-- Level 1 -->
+                <div class="level-card level-1 unlocked" id="card-level-1" onclick="GameEngine.startLevel(1)">
+                    <div class="level-badge">🟢</div>
+                    <h3 class="level-title">مستوى الفرسان ⚔️</h3>
+                    <p class="level-desc">10 تحديات بصرية ورياضية أساسية لإيجاد وكتابة الكسور المتكافئة.</p>
+                    <div class="level-status" id="status-level-1">جاهز للعب 🔓</div>
+                </div>
+
+                <!-- Level 2 -->
+                <div class="level-card level-2 locked" id="card-level-2" onclick="GameEngine.startLevel(2)">
+                    <div class="lock-overlay" id="lock-icon-level-2">🔒</div>
+                    <div class="level-badge">🟡</div>
+                    <h3 class="level-title">مستوى الأبطال 🛡️</h3>
+                    <p class="level-desc">6 مسائل متقدمة للكسور المتكافئة على خطوط الأعداد وتكافؤ مقارنات الكسور.</p>
+                    <div class="level-status" id="status-level-2">مغلق 🔒</div>
+                </div>
+
+                <!-- Level 3 -->
+                <div class="level-card level-3 locked" id="card-level-3" onclick="GameEngine.startLevel(3)">
+                    <div class="lock-overlay" id="lock-icon-level-3">🔒</div>
+                    <div class="level-badge">🔴</div>
+                    <h3 class="level-title">مستوى العباقرة 🧬</h3>
+                    <p class="level-desc">9 تحديات شاملة للمقارنة، الكسور كأعداد كلية، والمسائل اللفظية الذكية.</p>
+                    <div class="level-status" id="status-level-3">مغلق 🔒</div>
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+                <button onclick="GameEngine.resetData()" class="btn btn-secondary">إعادة تعيين التقدم 🔄</button>
+            </div>
+        </section>
+
+        <!-- 2. GAME SCREEN (QUESTIONS) -->
+        <section id="screen-game" class="screen">
+            <div class="game-bar">
+                <div class="game-bar-title" id="level-display-name">المستوى الأول</div>
+                <div class="game-bar-stats">
+                    <span class="stat-badge" id="stat-progress">1 / 10</span>
+                    <span class="stat-badge" id="stat-score">💎 0</span>
+                </div>
+            </div>
+
+            <div style="background:#e2e8f0;border-radius:999px;height:12px;margin-bottom:1.8rem;overflow:hidden">
+                <div id="stat-progressbar" style="height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:999px;transition:width 0.4s ease;width:10%"></div>
+            </div>
+
+            <!-- Content Card -->
+            <div class="q-card">
+                <div class="q-badge" id="q-badge-unit">الكسور المتكافئة</div>
+                <div class="q-text" id="q-text-content">نص السؤال</div>
+                <div id="q-input-area">إدخال السؤال</div>
+            </div>
+
+            <!-- Feedback -->
+            <div id="game-feedback" class="feedback hidden">التغذية الراجعة</div>
+
+            <!-- Game Actions -->
+            <div class="game-footer">
+                <button id="btn-check" class="btn btn-primary" onclick="GameEngine.checkAnswer()">تحقق ✅</button>
+                <button id="btn-next" class="btn btn-success hidden" onclick="GameEngine.nextQuestion()">التالي ➡️</button>
+                <button id="btn-back-map" class="btn btn-secondary" onclick="GameEngine.showMap()">خريطة المستويات 🗺️</button>
+            </div>
+        </section>
+
+        <!-- 3. LEVEL SUCCESS SCREEN -->
+        <section id="screen-success" class="screen">
+            <div class="summary-card">
+                <div style="font-size:5.5rem; margin-bottom:1rem;">🎉</div>
+                <h2 class="summary-title" id="success-title">نجاح باهر!</h2>
+                <p style="font-size:1.4rem; font-weight:bold; color:#4b5563; margin-bottom:1.5rem;" id="success-desc">لقد تجاوزت هذا المستوى بنجاح!</p>
+                <div class="summary-score-badge" id="success-score">0 / 0 نقطة</div>
+                <div style="display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap;">
+                    <button id="btn-success-action" class="btn btn-success" onclick="GameEngine.showMap()">العودة للخريطة 🗺️</button>
+                    <button class="btn btn-secondary" onclick="GameEngine.replayLevel()">إعادة المستوى 🔄</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. LEVEL FAILURE SCREEN -->
+        <section id="screen-fail" class="screen">
+            <div class="summary-card" style="border-color:var(--level3-color);">
+                <div style="font-size:5.5rem; margin-bottom:1rem;">😔</div>
+                <h2 class="summary-title" style="color:var(--level3-color);">لم تحصل على الدرجة المطلوبة</h2>
+                <p style="font-size:1.4rem; font-weight:bold; color:#4b5563; margin-bottom:1.5rem;">تحتاج إلى نسبة 80% على الأقل لفتح المستوى التالي.</p>
+                <div class="summary-score-badge" style="background:#fef2f2; border-color:#fca5a5; color:#991b1b;" id="fail-score">0 / 0 نقطة</div>
+                <div style="display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap;">
+                    <button class="btn btn-warning" onclick="GameEngine.replayLevel()">إعادة المحاولة 🔄</button>
+                    <button class="btn btn-secondary" onclick="GameEngine.showMap()">العودة للخريطة 🗺️</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Canvas for Confetti -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <script>
+        // ── Confetti Particle System ───────────────────────────────
+        const Confetti = (() => {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let animationFrameId = null;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * -canvas.height - 20;
+                    this.rotation = Math.random() * 360;
+                    this.rotationSpeed = Math.random() * 4 - 2;
+                    this.scale = Math.random() * 6 + 6;
+                    this.color = ['#10b981', '#f59e0b', '#ef4444', '#0ea5e9', '#8b5cf6'][Math.floor(Math.random() * 5)];
+                    this.speed = Math.random() * 3 + 4;
+                    this.wobble = Math.random() * 2 - 1;
+                    this.wobbleSpeed = Math.random() * 0.05 + 0.02;
+                    this.wobbleTime = 0;
+                }
+                update() {
+                    this.y += this.speed;
+                    this.rotation += this.rotationSpeed;
+                    this.wobbleTime += this.wobbleSpeed;
+                    this.x += Math.sin(this.wobbleTime) * this.wobble;
+                }
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate((this.rotation * Math.PI) / 180);
+                    ctx.scale(this.scale / 10, this.scale / 10);
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.rect(-10, -5, 20, 10);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            function loop() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p, idx) => {
+                    p.update();
+                    p.draw();
+                    if (p.y > canvas.height) {
+                        particles[idx] = new Particle();
+                    }
+                });
+                animationFrameId = requestAnimationFrame(loop);
+            }
+
+            function start() {
+                resize();
+                particles = Array.from({ length: 100 }, () => new Particle());
+                if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                loop();
+                setTimeout(() => {
+                    cancelAnimationFrame(animationFrameId);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }, 5000);
+            }
+
+            return { start };
+        })();
+
+        // ── Mathematical Render Helpers ─────────────────────────────────────
+        const frac = (n, d) =>
+            `<span style="display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1;font-size:1.15em;padding:0 3px">
+                <span style="border-bottom:2px solid currentColor;padding:0 5px">${n}</span>
+                <span style="padding:2px 5px 0">${d}</span>
+            </span>`;
+
+        const sFrac = (x, y, n, d, fs=12, color='white') => 
+            `<text x="${x}" y="${y-4}" text-anchor="middle" fill="${color}" font-weight="bold" font-size="${fs}">${n}</text>` +
+            `<line x1="${x-8}" y1="${y-1}" x2="${x+8}" y2="${y-1}" stroke="${color}" stroke-width="1.5"/>` +
+            `<text x="${x}" y="${y+11}" text-anchor="middle" fill="${color}" font-weight="bold" font-size="${fs}">${d}</text>`;
+
+        const radioHTML = (name, opts) => 
+            `<div style="display:flex;flex-direction:column;gap:1rem;margin:1.5rem 0;align-items:center;width:100%">` + 
+            opts.map((opt, i) => `
+                <label style="display:flex;align-items:center;gap:15px;cursor:pointer;">
+                    <input type="radio" name="${name}" value="${i}">
+                    <span dir="ltr" style="display:inline-flex;align-items:center;gap:8px">${opt}</span>
+                </label>
+            `).join('') + `</div>`;
+
+        const selectNum = (id, opts) => 
+            `<select id="${id}">
+                <option value="" disabled selected>?</option>
+                ${opts.map(o => `<option value="${o}">${o}</option>`).join('')}
+            </select>`;
+
+        // ── Comprehensive Question Database ─────────────────────────────────
+        const GAME_DB = {
+            level1: [
+                {
+                    unit: 'الكسور المتكافئة', color: '#0ea5e9',
+                    text: `ما الكسر المكافئ للكسر ${frac(3,4)} ؟ (يمكنك استعمال النماذج أدناه)`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:2rem 0">
+                        <svg width="250" height="150" viewBox="0 0 250 150">
+                            <g transform="translate(10, 10)">
+                                <rect x="0" y="0" width="80" height="120" fill="white" stroke="black" stroke-width="1.5"/>
+                                <rect x="0" y="0" width="80" height="90" fill="#a78bfa" stroke="black" stroke-width="1"/>
+                                <line x1="0" y1="30" x2="80" y2="30" stroke="black"/>
+                                <line x1="0" y1="60" x2="80" y2="60" stroke="black"/>
+                                <line x1="0" y1="90" x2="80" y2="90" stroke="black"/>
+                                
+                                <g transform="translate(130, 0)">
+                                    <rect x="0" y="0" width="80" height="120" fill="white" stroke="black" stroke-width="1.5"/>
+                                    <rect x="0" y="0" width="80" height="90" fill="#38bdf8" stroke="black" stroke-width="1"/>
+                                    <line x1="0" y1="15" x2="80" y2="15" stroke="black"/>
+                                    <line x1="0" y1="30" x2="80" y2="30" stroke="black"/>
+                                    <line x1="0" y1="45" x2="80" y2="45" stroke="black"/>
+                                    <line x1="0" y1="60" x2="80" y2="60" stroke="black"/>
+                                    <line x1="0" y1="75" x2="80" y2="75" stroke="black"/>
+                                    <line x1="0" y1="90" x2="80" y2="90" stroke="black"/>
+                                    <line x1="0" y1="105" x2="80" y2="105" stroke="black"/>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    ${radioHTML('q1', [`${frac(3,8)}`, `${frac(6,8)}`, `${frac(6,4)}`])}`,
+                    check: () => document.querySelector('input[name="q1"]:checked')?.value === '1',
+                    ansText: `6/8`
+                },
+                {
+                    unit: 'الكسور المتكافئة', color: '#0ea5e9',
+                    text: `ما الكسر المكافئ للكسر ${frac(1,2)} ؟ (يمكنك استعمال النماذج أدناه)`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:2rem 0">
+                        <svg width="400" height="120" viewBox="0 0 400 120">
+                            <g transform="translate(10, 10)">
+                                <rect x="0" y="0" width="300" height="30" fill="#dc2626" stroke="black" stroke-width="1.5"/>
+                                <text x="150" y="21" text-anchor="middle" fill="white" font-weight="bold" font-size="18">1</text>
+                                
+                                <rect x="0" y="30" width="150" height="30" fill="#ec4899" stroke="black" stroke-width="1.5"/>
+                                ${sFrac(75, 45, '1', '2', 15)}
+                                
+                                <g transform="translate(0, 60)">
+                                    <rect x="0" y="0" width="37.5" height="30" fill="#1e40af" stroke="black" stroke-width="1"/>
+                                    ${sFrac(18.75, 15, '1', '8', 12)}
+                                    <rect x="37.5" y="0" width="37.5" height="30" fill="#1e40af" stroke="black" stroke-width="1"/>
+                                    ${sFrac(56.25, 15, '1', '8', 12)}
+                                    <rect x="75" y="0" width="37.5" height="30" fill="#1e40af" stroke="black" stroke-width="1"/>
+                                    ${sFrac(93.75, 15, '1', '8', 12)}
+                                    <rect x="112.5" y="0" width="37.5" height="30" fill="#1e40af" stroke="black" stroke-width="1"/>
+                                    ${sFrac(131.25, 15, '1', '8', 12)}
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    ${radioHTML('q2', [`${frac(2,8)}`, `${frac(3,8)}`, `${frac(4,8)}`])}`,
+                    check: () => document.querySelector('input[name="q2"]:checked')?.value === '2',
+                    ansText: `4/8`
+                },
+                {
+                    unit: 'الكسور المتكافئة', color: '#0ea5e9',
+                    text: `ما الكسر المكافئ للكسر ${frac(4,6)} ؟ (يمكنك استعمال النماذج أدناه)`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:2rem 0">
+                        <svg width="400" height="120" viewBox="0 0 400 120">
+                            <g transform="translate(10, 10)">
+                                <rect x="0" y="0" width="300" height="30" fill="#dc2626" stroke="black" stroke-width="1.5"/>
+                                <text x="150" y="21" text-anchor="middle" fill="white" font-weight="bold" font-size="18">1</text>
+                                
+                                <g transform="translate(0, 30)">
+                                    <rect x="0" y="0" width="50" height="30" fill="#0d9488" stroke="black" stroke-width="1"/>
+                                    ${sFrac(25, 15, '1', '6', 12)}
+                                    <rect x="50" y="0" width="50" height="30" fill="#0d9488" stroke="black" stroke-width="1"/>
+                                    ${sFrac(75, 15, '1', '6', 12)}
+                                    <rect x="100" y="0" width="50" height="30" fill="#0d9488" stroke="black" stroke-width="1"/>
+                                    ${sFrac(125, 15, '1', '6', 12)}
+                                    <rect x="150" y="0" width="50" height="30" fill="#0d9488" stroke="black" stroke-width="1"/>
+                                    ${sFrac(175, 15, '1', '6', 12)}
+                                </g>
+                                
+                                <g transform="translate(0, 60)">
+                                    <rect x="0" y="0" width="100" height="30" fill="#ea580c" stroke="black" stroke-width="1"/>
+                                    ${sFrac(50, 15, '1', '3', 13)}
+                                    <rect x="100" y="0" width="100" height="30" fill="#ea580c" stroke="black" stroke-width="1"/>
+                                    ${sFrac(150, 15, '1', '3', 13)}
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    ${radioHTML('q3', [`${frac(1,6)}`, `${frac(1,3)}`, `${frac(2,3)}`])}`,
+                    check: () => document.querySelector('input[name="q3"]:checked')?.value === '2',
+                    ansText: `2/3`
+                },
+                {
+                    unit: 'الكسور المتكافئة - خط الأعداد', color: '#8b5cf6',
+                    text: `ما الكسر المكافئ للكسر ${frac(3,6)} ؟ (يمكنك استعمال خط الأعداد)`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:3rem 0 2rem">
+                        <svg width="450" height="80" viewBox="0 0 450 80">
+                            <line x1="30" y1="40" x2="420" y2="40" stroke="black" stroke-width="2"/>
+                            <polygon points="30,40 38,36 38,44" fill="black"/>
+                            <polygon points="420,40 412,36 412,44" fill="black"/>
+                            
+                            <line x1="50" y1="33" x2="50" y2="47" stroke="black" stroke-width="2"/>
+                            <text x="50" y="70" text-anchor="middle" font-weight="bold" font-size="20">0</text>
+                            
+                            <line x1="110" y1="33" x2="110" y2="47" stroke="black" stroke-width="2"/>
+                            ${sFrac(110, 65, '1', '6', 15, 'black')}
+                            
+                            <line x1="170" y1="33" x2="170" y2="47" stroke="black" stroke-width="2"/>
+                            ${sFrac(170, 65, '2', '6', 15, 'black')}
+                            
+                            <line x1="230" y1="28" x2="230" y2="52" stroke="#dc2626" stroke-width="3"/>
+                            ${sFrac(230, 65, '3', '6', 18, '#dc2626')}
+                            
+                            <line x1="290" y1="33" x2="290" y2="47" stroke="black" stroke-width="2"/>
+                            ${sFrac(290, 65, '4', '6', 15, 'black')}
+                            
+                            <line x1="350" y1="33" x2="350" y2="47" stroke="black" stroke-width="2"/>
+                            ${sFrac(350, 65, '5', '6', 15, 'black')}
+                            
+                            <line x1="410" y1="33" x2="410" y2="47" stroke="black" stroke-width="2"/>
+                            <text x="410" y="70" text-anchor="middle" font-weight="bold" font-size="20">1</text>
+                        </svg>
+                    </div>
+                    ${radioHTML('q4', [`${frac(1,2)}`, `${frac(2,3)}`, `${frac(6,5)}`])}`,
+                    check: () => document.querySelector('input[name="q4"]:checked')?.value === '0',
+                    ansText: `1/2`
+                },
+                {
+                    unit: 'الكسور المتكافئة - خط الأعداد', color: '#8b5cf6',
+                    text: `ما الكسر المكافئ للكسر ${frac(1,3)} ؟ (يمكنك استعمال خط الأعداد)`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:3rem 0 2rem">
+                        <svg width="450" height="80" viewBox="0 0 450 80">
+                            <line x1="30" y1="40" x2="420" y2="40" stroke="black" stroke-width="2"/>
+                            <polygon points="30,40 38,36 38,44" fill="black"/>
+                            <polygon points="420,40 412,36 412,44" fill="black"/>
+                            
+                            <line x1="50" y1="33" x2="50" y2="47" stroke="black" stroke-width="2"/>
+                            <text x="50" y="70" text-anchor="middle" font-weight="bold" font-size="20">0</text>
+                            
+                            <line x1="170" y1="28" x2="170" y2="52" stroke="#dc2626" stroke-width="3"/>
+                            ${sFrac(170, 65, '1', '3', 18, '#dc2626')}
+                            
+                            <line x1="290" y1="33" x2="290" y2="47" stroke="black" stroke-width="2"/>
+                            ${sFrac(290, 65, '2', '3', 15, 'black')}
+                            
+                            <line x1="410" y1="33" x2="410" y2="47" stroke="black" stroke-width="2"/>
+                            <text x="410" y="70" text-anchor="middle" font-weight="bold" font-size="20">1</text>
+                        </svg>
+                    </div>
+                    ${radioHTML('q5', [`${frac(1,6)}`, `${frac(2,6)}`, `${frac(5,6)}`])}`,
+                    check: () => document.querySelector('input[name="q5"]:checked')?.value === '1',
+                    ansText: `2/6`
+                },
+                {
+                    unit: 'إيجاد الكسور المتكافئة', color: '#10b981',
+                    text: `أوجد الكسر المكافئ باستخدام النماذج المظللة:`,
+                    type: 'equation',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:2rem 0">
+                        <svg width="250" height="150" viewBox="0 0 250 150">
+                            <g transform="translate(10, 10)">
+                                <rect x="0" y="0" width="80" height="120" fill="white" stroke="black" stroke-width="1.5"/>
+                                <rect x="0" y="0" width="80" height="40" fill="#a78bfa" stroke="black" stroke-width="1"/>
+                                <line x1="0" y1="40" x2="80" y2="40" stroke="black"/>
+                                <line x1="0" y1="80" x2="80" y2="80" stroke="black"/>
+                                <line x1="40" y1="0" x2="40" y2="120" stroke="black"/>
+                                
+                                <g transform="translate(130, 0)">
+                                    <rect x="0" y="0" width="80" height="120" fill="white" stroke="black" stroke-width="1.5"/>
+                                    <rect x="0" y="0" width="80" height="40" fill="#38bdf8" stroke="black" stroke-width="1"/>
+                                    <line x1="0" y1="40" x2="80" y2="40" stroke="black"/>
+                                    <line x1="0" y1="80" x2="80" y2="80" stroke="black"/>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:3rem;font-weight:bold" dir="ltr">
+                        ${frac(2, 6)} = ${frac(selectNum('q6num', [1,2,3,4]), selectNum('q6den', [2,3,4,6,8]))}
+                    </div>`,
+                    check: () => document.getElementById('q6num').value === '1' && document.getElementById('q6den').value === '3',
+                    ansText: `1/3`
+                },
+                {
+                    unit: 'إيجاد الكسور المتكافئة', color: '#10b981',
+                    text: `أوجد الكسر المكافئ باستخدام النماذج المظللة:`,
+                    type: 'equation',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:2rem 0">
+                        <svg width="250" height="150" viewBox="0 0 250 150">
+                            <g transform="translate(10, 10)">
+                                <rect x="0" y="0" width="80" height="120" fill="white" stroke="black" stroke-width="1.5"/>
+                                <rect x="0" y="0" width="80" height="90" fill="#9ca3af" stroke="black" stroke-width="1"/>
+                                <line x1="0" y1="30" x2="80" y2="30" stroke="black"/>
+                                <line x1="0" y1="60" x2="80" y2="60" stroke="black"/>
+                                <line x1="0" y1="90" x2="80" y2="90" stroke="black"/>
+                                
+                                <g transform="translate(130, 0)">
+                                    <rect x="0" y="0" width="80" height="120" fill="white" stroke="black" stroke-width="1.5"/>
+                                    <rect x="0" y="0" width="80" height="90" fill="#9ca3af" stroke="black" stroke-width="1"/>
+                                    <line x1="0" y1="30" x2="80" y2="30" stroke="black"/>
+                                    <line x1="0" y1="60" x2="80" y2="60" stroke="black"/>
+                                    <line x1="0" y1="90" x2="80" y2="90" stroke="black"/>
+                                    <line x1="40" y1="0" x2="40" y2="120" stroke="black"/>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:3rem;font-weight:bold" dir="ltr">
+                        ${frac(3, 4)} = ${frac(selectNum('q7num', [2,4,6,8]), selectNum('q7den', [4,6,8,12]))}
+                    </div>`,
+                    check: () => document.getElementById('q7num').value === '6' && document.getElementById('q7den').value === '8',
+                    ansText: `6/8`
+                },
+                {
+                    unit: 'اكتب الكسر المكافئ', color: '#d97706',
+                    text: `أكمل الفراغ لكتابة الكسر المكافئ:`,
+                    type: 'equation',
+                    html: `
+                    <div style="display:flex;align-items:center;justify-content:center;gap:2rem;font-size:4rem;font-weight:bold;margin:4rem 0" dir="ltr">
+                        ${frac(1, 5)} = ${frac(selectNum('q8num', [1,2,3,4,5]), 10)}
+                    </div>`,
+                    check: () => document.getElementById('q8num').value === '2',
+                    ansText: `2/10`
+                },
+                {
+                    unit: 'اكتب الكسر المكافئ', color: '#d97706',
+                    text: `أكمل الفراغ لكتابة الكسر المكافئ:`,
+                    type: 'equation',
+                    html: `
+                    <div style="display:flex;align-items:center;justify-content:center;gap:2rem;font-size:4rem;font-weight:bold;margin:4rem 0" dir="ltr">
+                        ${frac(6, 18)} = ${frac(1, selectNum('q9den', [2,3,4,6,8]))}
+                    </div>`,
+                    check: () => document.getElementById('q9den').value === '3',
+                    ansText: `1/3`
+                },
+                {
+                    unit: 'اكتب الكسر المكافئ', color: '#d97706',
+                    text: `أكمل الفراغ لكتابة الكسر المكافئ:`,
+                    type: 'equation',
+                    html: `
+                    <div style="display:flex;align-items:center;justify-content:center;gap:2rem;font-size:4rem;font-weight:bold;margin:4rem 0" dir="ltr">
+                        ${frac(2, 5)} = ${frac(selectNum('q10num', [2,4,5,6,10]), 15)}
+                    </div>`,
+                    check: () => document.getElementById('q10num').value === '6',
+                    ansText: `6/15`
+                }
+            ],
+            level2: [
+                {
+                    unit: 'الكسور المتكافئة - خط الأعداد', color: '#8b5cf6',
+                    text: `ما الكسر المكافئ للكسر ${frac(2,8)} ؟ (يمكنك استعمال خط الأعداد)`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:3rem 0 2rem">
+                        <svg width="450" height="80" viewBox="0 0 450 80">
+                            <line x1="30" y1="40" x2="420" y2="40" stroke="black" stroke-width="2"/>
+                            <polygon points="30,40 38,36 38,44" fill="black"/>
+                            <polygon points="420,40 412,36 412,44" fill="black"/>
+                            
+                            <line x1="40" y1="33" x2="40" y2="47" stroke="black" stroke-width="2"/>
+                            <text x="40" y="70" text-anchor="middle" font-weight="bold" font-size="20">0</text>
+                            
+                            ${[1,2,3,4,5,6,7].map(i => `
+                            <line x1="${40 + i*47.5}" y1="33" x2="${40 + i*47.5}" y2="47" stroke="${i===2 ? '#dc2626' : 'black'}" stroke-width="${i===2 ? 3 : 2}"/>
+                            ${sFrac(40 + i*47.5, 65, i, 8, i===2 ? 18 : 15, i===2 ? '#dc2626' : 'black')}
+                            `).join('')}
+                            
+                            <line x1="420" y1="33" x2="420" y2="47" stroke="black" stroke-width="2"/>
+                            <text x="420" y="70" text-anchor="middle" font-weight="bold" font-size="20">1</text>
+                        </svg>
+                    </div>
+                    ${radioHTML('qnew1', [`${frac(1,4)}`, `${frac(2,4)}`, `${frac(3,4)}`])}`,
+                    check: () => document.querySelector('input[name="qnew1"]:checked')?.value === '0',
+                    ansText: `1/4`
+                },
+                {
+                    unit: 'الكسور المتكافئة - خط الأعداد', color: '#10b981',
+                    text: `اكتب كسرين يمثلان نفس الموقع على خط الأعداد (النقطة الحمراء):`,
+                    type: 'equation',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:3rem 0 2rem">
+                        <svg width="450" height="155" viewBox="0 -15 450 155">
+                            <!-- Top Line -->
+                            <line x1="30" y1="30" x2="420" y2="30" stroke="black" stroke-width="2"/>
+                            <polygon points="30,30 38,26 38,34" fill="black"/>
+                            <polygon points="420,30 412,26 412,34" fill="black"/>
+                            
+                            <line x1="40" y1="23" x2="40" y2="37" stroke="black" stroke-width="2"/>
+                            <text x="40" y="15" text-anchor="middle" font-weight="bold" font-size="16">0</text>
+                            
+                            ${[1,2,3,4,5,6,7].map(i => `
+                            <line x1="${40 + i*47.5}" y1="23" x2="${40 + i*47.5}" y2="37" stroke="black" stroke-width="2"/>
+                            ${sFrac(40 + i*47.5, 10, i, 8, 12, 'black')}
+                            `).join('')}
+                            
+                            <line x1="420" y1="23" x2="420" y2="37" stroke="black" stroke-width="2"/>
+                            <text x="420" y="15" text-anchor="middle" font-weight="bold" font-size="16">1</text>
+        
+                            <!-- Bottom Line -->
+                            <line x1="30" y1="90" x2="420" y2="90" stroke="black" stroke-width="2"/>
+                            <polygon points="30,90 38,86 38,94" fill="black"/>
+                            <polygon points="420,90 412,86 412,94" fill="black"/>
+                            
+                            <line x1="40" y1="83" x2="40" y2="97" stroke="black" stroke-width="2"/>
+                            
+                            ${[1,2,3].map(i => `
+                            <line x1="${40 + i*95}" y1="83" x2="${40 + i*95}" y2="97" stroke="black" stroke-width="2"/>
+                            ${sFrac(40 + i*95, 120, i, 4, 12, 'black')}
+                            `).join('')}
+                            
+                            <line x1="420" y1="83" x2="420" y2="97" stroke="black" stroke-width="2"/>
+        
+                            <!-- Red Dot -->
+                            <circle cx="230" cy="30" r="6" fill="red"/>
+                            <circle cx="230" cy="90" r="6" fill="red"/>
+                            <line x1="230" y1="36" x2="230" y2="84" stroke="red" stroke-width="1.5" stroke-dasharray="4"/>
+                        </svg>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:3rem;font-weight:bold" dir="ltr">
+                        ${frac(selectNum('qn2n1', [2,3,4,6]), selectNum('qn2d1', [4,6,8,12]))} = ${frac(selectNum('qn2n2', [1,2,3]), selectNum('qn2d2', [2,3,4,8]))}
+                    </div>`,
+                    check: () => (document.getElementById('qn2n1').value === '4' && document.getElementById('qn2d1').value === '8' && document.getElementById('qn2n2').value === '2' && document.getElementById('qn2d2').value === '4') || 
+                                 (document.getElementById('qn2n1').value === '2' && document.getElementById('qn2d1').value === '4' && document.getElementById('qn2n2').value === '4' && document.getElementById('qn2d2').value === '8'),
+                    ansText: `4/8 = 2/4`
+                },
+                {
+                    unit: 'مقارنة الكسور', color: '#ec4899',
+                    text: `قارن بين الكسرين أدناه باستعمال > أو < أو = . (يمكنك استخدام شرائط الكسور)`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:2rem 0">
+                        <svg width="300" height="120" viewBox="0 0 300 120">
+                            <g transform="translate(0, 10)">
+                                <rect x="0" y="0" width="300" height="30" fill="#dc2626" stroke="black" stroke-width="1.5"/>
+                                <text x="150" y="21" text-anchor="middle" fill="white" font-weight="bold" font-size="18">1</text>
+                                
+                                <g transform="translate(0, 30)">
+                                    ${[0,1,2].map(i => `
+                                    <rect x="${i*50}" y="0" width="50" height="30" fill="#0d9488" stroke="black" stroke-width="1.5"/>
+                                    ${sFrac(i*50 + 25, 15, '1', '6', 11)}
+                                    `).join('')}
+                                </g>
+        
+                                <g transform="translate(0, 60)">
+                                    ${[0,1,2,3,4].map(i => `
+                                    <rect x="${i*50}" y="0" width="50" height="30" fill="#0d9488" stroke="black" stroke-width="1.5"/>
+                                    ${sFrac(i*50 + 25, 15, '1', '6', 11)}
+                                    `).join('')}
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:3.5rem;font-weight:bold;margin-bottom:2rem" dir="ltr">
+                        ${frac(3, 6)} <div style="display:inline-block;width:55px;height:55px;border:3px solid #1e3a8a;border-radius:50%;text-align:center;line-height:49px;font-size:2.5rem;color:#dc2626">?</div> ${frac(5, 6)}
+                    </div>
+                    ${radioHTML('qnew3', ['&lt;', '&gt;', '='])}`,
+                    check: () => document.querySelector('input[name="qnew3"]:checked')?.value === '0',
+                    ansText: `<`
+                },
+                {
+                    unit: 'مقارنة الكسور', color: '#ec4899',
+                    text: `قارن بين الكسرين أدناه باستعمال > أو < أو = . (يمكنك استخدام خطوط الأعداد)`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:3rem 0 2rem">
+                        <svg width="450" height="155" viewBox="0 -15 450 155">
+                            <!-- Top Line -->
+                            <line x1="30" y1="30" x2="420" y2="30" stroke="black" stroke-width="2"/>
+                            <polygon points="30,30 38,26 38,34" fill="black"/>
+                            <polygon points="420,30 412,26 412,34" fill="black"/>
+                            
+                            <line x1="40" y1="23" x2="40" y2="37" stroke="black" stroke-width="2"/>
+                            <text x="40" y="15" text-anchor="middle" font-weight="bold" font-size="16">0</text>
+                            
+                            ${[1,2,3,4,5].map(i => `
+                            <line x1="${40 + i*63.33}" y1="23" x2="${40 + i*63.33}" y2="37" stroke="black" stroke-width="2"/>
+                            ${sFrac(40 + i*63.33, 10, i, 6, 12, 'black')}
+                            `).join('')}
+                            
+                            <line x1="420" y1="23" x2="420" y2="37" stroke="black" stroke-width="2"/>
+                            <text x="420" y="15" text-anchor="middle" font-weight="bold" font-size="16">1</text>
+        
+                            <!-- Bottom Line -->
+                            <line x1="30" y1="90" x2="420" y2="90" stroke="black" stroke-width="2"/>
+                            <polygon points="30,90 38,86 38,94" fill="black"/>
+                            <polygon points="420,90 412,86 412,94" fill="black"/>
+                            
+                            <line x1="40" y1="83" x2="40" y2="97" stroke="black" stroke-width="2"/>
+                            
+                            ${[1,2].map(i => `
+                            <line x1="${40 + i*126.66}" y1="83" x2="${40 + i*126.66}" y2="97" stroke="black" stroke-width="2"/>
+                            ${sFrac(40 + i*126.66, 120, i, 3, 12, 'black')}
+                            `).join('')}
+                            
+                            <line x1="420" y1="83" x2="420" y2="97" stroke="black" stroke-width="2"/>
+                            <text x="420" y="115" text-anchor="middle" font-weight="bold" font-size="16">1</text>
+                        </svg>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:3.5rem;font-weight:bold;margin-bottom:2rem" dir="ltr">
+                        ${frac(2, 6)} <div style="display:inline-block;width:55px;height:55px;border:3px solid #1e3a8a;border-radius:50%;text-align:center;line-height:49px;font-size:2.5rem;color:#dc2626">?</div> ${frac(1, 3)}
+                    </div>
+                    ${radioHTML('qnew4', ['&lt;', '&gt;', '='])}`,
+                    check: () => document.querySelector('input[name="qnew4"]:checked')?.value === '2',
+                    ansText: `=`
+                },
+                {
+                    unit: 'مقارنة الكسور', color: '#ec4899',
+                    text: `قارن بين الكسرين أدناه باستعمال > أو < أو = . (يمكنك استخدام شرائط الكسور)`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:2rem 0">
+                        <svg width="300" height="120" viewBox="0 0 300 120">
+                            <g transform="translate(0, 10)">
+                                <rect x="0" y="0" width="300" height="30" fill="#d1d5db" stroke="black" stroke-width="1.5"/>
+                                <text x="150" y="21" text-anchor="middle" fill="black" font-weight="bold" font-size="18">1</text>
+                                
+                                <g transform="translate(0, 30)">
+                                    <rect x="0" y="0" width="100" height="30" fill="#f3f4f6" stroke="black" stroke-width="1.5"/>
+                                    ${sFrac(50, 15, '1', '3', 13, 'black')}
+                                </g>
+        
+                                <g transform="translate(0, 60)">
+                                    <rect x="0" y="0" width="150" height="30" fill="white" stroke="black" stroke-width="1.5"/>
+                                    ${sFrac(75, 15, '1', '2', 13, 'black')}
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:3.5rem;font-weight:bold;margin-bottom:2rem" dir="ltr">
+                        ${frac(1, 3)} <div style="display:inline-block;width:55px;height:55px;border:3px solid #1e3a8a;border-radius:50%;text-align:center;line-height:49px;font-size:2.5rem;color:#dc2626">?</div> ${frac(1, 2)}
+                    </div>
+                    ${radioHTML('qnew5', ['&lt;', '&gt;', '='])}`,
+                    check: () => document.querySelector('input[name="qnew5"]:checked')?.value === '0',
+                    ansText: `<`
+                },
+                {
+                    unit: 'مقارنة الكسور', color: '#ec4899',
+                    text: `انظر إلى شرائط الكسور أدناه. أي المقارنات التالية صحيحة؟`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:2rem 0">
+                        <svg width="300" height="120" viewBox="0 0 300 120">
+                            <g transform="translate(0, 10)">
+                                <rect x="0" y="0" width="300" height="30" fill="#dc2626" stroke="black" stroke-width="1.5"/>
+                                <text x="150" y="21" text-anchor="middle" fill="white" font-weight="bold" font-size="18">1</text>
+                                
+                                <g transform="translate(0, 30)">
+                                    ${[0,1].map(i => `
+                                    <rect x="${i*100}" y="0" width="100" height="30" fill="#f97316" stroke="black" stroke-width="1.5"/>
+                                    ${sFrac(i*100 + 50, 15, '1', '3', 12, 'white')}
+                                    `).join('')}
+                                </g>
+        
+                                <g transform="translate(0, 60)">
+                                    ${[0,1,2].map(i => `
+                                    <rect x="${i*100}" y="0" width="100" height="30" fill="#f97316" stroke="black" stroke-width="1.5"/>
+                                    ${sFrac(i*100 + 50, 15, '1', '3', 12, 'white')}
+                                    `).join('')}
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    ${radioHTML('qnew6', [`${frac(2,3)} &gt; ${frac(3,3)}`, `${frac(2,3)} = ${frac(3,3)}`, `${frac(2,3)} &lt; ${frac(3,3)}`])}`,
+                    check: () => document.querySelector('input[name="qnew6"]:checked')?.value === '2',
+                    ansText: `2/3 < 3/3`
+                }
+            ],
+            level3: [
+                {
+                    unit: 'مقارنة الكسور', color: '#ec4899',
+                    text: `انظر إلى شرائط الكسور أدناه. أي المقارنات التالية صحيحة؟`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:2rem 0">
+                        <svg width="300" height="120" viewBox="0 0 300 120">
+                            <g transform="translate(0, 10)">
+                                <rect x="0" y="0" width="300" height="30" fill="#9ca3af" stroke="black" stroke-width="1.5"/>
+                                <text x="150" y="21" text-anchor="middle" fill="black" font-weight="bold" font-size="18">1</text>
+                                
+                                <g transform="translate(0, 30)">
+                                    <rect x="0" y="0" width="50" height="30" fill="#e5e7eb" stroke="black" stroke-width="1.5"/>
+                                    ${sFrac(25, 15, '1', '6', 11, 'black')}
+                                </g>
+        
+                                <g transform="translate(0, 60)">
+                                    <rect x="0" y="0" width="150" height="30" fill="#e5e7eb" stroke="black" stroke-width="1.5"/>
+                                    ${sFrac(75, 15, '1', '2', 11, 'black')}
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    ${radioHTML('qnew7', [`${frac(1,6)} &gt; ${frac(1,2)}`, `${frac(1,6)} &lt; ${frac(1,2)}`, `${frac(1,6)} = ${frac(1,2)}`])}`,
+                    check: () => document.querySelector('input[name="qnew7"]:checked')?.value === '1',
+                    ansText: `1/6 < 1/2`
+                },
+                {
+                    unit: 'مقارنة الكسور', color: '#ec4899',
+                    text: `انظر إلى خطوط الأعداد أدناه. أي المقارنات التالية صحيحة؟`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:3rem 0 2rem">
+                        <svg width="450" height="155" viewBox="0 -15 450 155">
+                            <!-- Top Line (Thirds) -->
+                            <line x1="30" y1="30" x2="420" y2="30" stroke="black" stroke-width="2"/>
+                            <polygon points="30,30 38,26 38,34" fill="black"/>
+                            <polygon points="420,30 412,26 412,34" fill="black"/>
+                            
+                            <line x1="40" y1="23" x2="40" y2="37" stroke="black" stroke-width="2"/>
+                            <text x="40" y="15" text-anchor="middle" font-weight="bold" font-size="16">0</text>
+                            
+                            ${[1,2].map(i => `
+                            <line x1="${40 + i*126.66}" y1="23" x2="${40 + i*126.66}" y2="37" stroke="black" stroke-width="2"/>
+                            ${sFrac(40 + i*126.66, 10, i, 3, 12, 'black')}
+                            `).join('')}
+                            
+                            <line x1="420" y1="23" x2="420" y2="37" stroke="black" stroke-width="2"/>
+                            <text x="420" y="15" text-anchor="middle" font-weight="bold" font-size="16">1</text>
+        
+                            <!-- Bottom Line (Eighths) -->
+                            <line x1="30" y1="90" x2="420" y2="90" stroke="black" stroke-width="2"/>
+                            <polygon points="30,90 38,86 38,94" fill="black"/>
+                            <polygon points="420,90 412,86 412,94" fill="black"/>
+                            
+                            <line x1="40" y1="83" x2="40" y2="97" stroke="black" stroke-width="2"/>
+                            
+                            ${[1,2,3,4,5,6,7].map(i => `
+                            <line x1="${40 + i*47.5}" y1="83" x2="${40 + i*47.5}" y2="97" stroke="black" stroke-width="2"/>
+                            ${sFrac(40 + i*47.5, 120, i, 8, 12, 'black')}
+                            `).join('')}
+                            
+                            <line x1="420" y1="83" x2="420" y2="97" stroke="black" stroke-width="2"/>
+                            <text x="420" y="115" text-anchor="middle" font-weight="bold" font-size="16">1</text>
+                        </svg>
+                    </div>
+                    ${radioHTML('qnew8', [`${frac(2,8)} &gt; ${frac(1,3)}`, `${frac(2,8)} &lt; ${frac(1,3)}`, `${frac(2,8)} = ${frac(1,3)}`])}`,
+                    check: () => document.querySelector('input[name="qnew8"]:checked')?.value === '1',
+                    ansText: `2/8 < 1/3`
+                },
+                {
+                    unit: 'الكسور كأعداد كلية', color: '#f59e0b',
+                    text: `ما العدد الكلي المكافئ للكسرين أدناه؟`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:3.5rem;font-weight:bold;margin:3rem 0" dir="ltr">
+                        ${frac(10, 2)} = ${frac(5, 1)} = <div style="display:inline-block;width:60px;height:60px;border:3px solid #1e3a8a;border-radius:10px;text-align:center;line-height:54px;font-size:2.5rem;color:#dc2626">?</div>
+                    </div>
+                    ${radioHTML('qnew9', ['1', '2', '5'])}`,
+                    check: () => document.querySelector('input[name="qnew9"]:checked')?.value === '2',
+                    ansText: `5`
+                },
+                {
+                    unit: 'الكسور كأعداد كلية', color: '#f59e0b',
+                    text: `ما العدد الكلي المكافئ للكسرين أدناه.`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:3.5rem;font-weight:bold;margin:3rem 0" dir="ltr">
+                        ${frac(5, 5)} = ${frac(3, 3)} = <div style="display:inline-block;width:60px;height:60px;border:3px solid #1e3a8a;border-radius:10px;text-align:center;line-height:54px;font-size:2.5rem;color:#dc2626">?</div>
+                    </div>
+                    ${radioHTML('qnew10', ['1', '3', '5'])}`,
+                    check: () => document.querySelector('input[name="qnew10"]:checked')?.value === '0',
+                    ansText: `1`
+                },
+                {
+                    unit: 'مسائل لفظية', color: '#6366f1',
+                    text: `يقدم مطعم ${frac(1,2)} برتقالة مع كل وجبة. كم وجبة يجب أن يبيع المطعم ليكون قد قَدَّم 6 برتقالات كاملة؟`,
+                    type: 'mcq',
+                    html: `
+                    ${radioHTML('qnew11', ['8', '10', '12'])}`,
+                    check: () => document.querySelector('input[name="qnew11"]:checked')?.value === '2',
+                    ansText: `12`
+                },
+                {
+                    unit: 'مقارنة الكسور', color: '#ec4899',
+                    text: `قارن بين الكسرين أدناه باستعمال > أو < أو = . (يمكنك استخدام شرائط الكسور)`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:2rem 0">
+                        <svg width="300" height="120" viewBox="0 0 300 120">
+                            <g transform="translate(0, 10)">
+                                <rect x="0" y="0" width="300" height="30" fill="#9ca3af" stroke="black" stroke-width="1.5"/>
+                                <text x="150" y="21" text-anchor="middle" fill="black" font-weight="bold" font-size="18">1</text>
+                                
+                                <g transform="translate(0, 30)">
+                                    <rect x="0" y="0" width="100" height="30" fill="#e5e7eb" stroke="black" stroke-width="1.5"/>
+                                    ${sFrac(50, 15, '1', '3', 11, 'black')}
+                                </g>
+        
+                                <g transform="translate(0, 60)">
+                                    ${[0,1].map(i => `
+                                    <rect x="${i*100}" y="0" width="100" height="30" fill="#e5e7eb" stroke="black" stroke-width="1.5"/>
+                                    ${sFrac(i*100 + 50, 15, '1', '3', 11, 'black')}
+                                    `).join('')}
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:3.5rem;font-weight:bold;margin-bottom:2rem" dir="ltr">
+                        ${frac(2, 3)} <div style="display:inline-block;width:55px;height:55px;border:3px solid #1e3a8a;border-radius:50%;text-align:center;line-height:49px;font-size:2.5rem;color:#dc2626">?</div> ${frac(1, 3)}
+                    </div>
+                    ${radioHTML('qnew12', ['&lt;', '&gt;', '='])}`,
+                    check: () => document.querySelector('input[name="qnew12"]:checked')?.value === '1',
+                    ansText: `>`
+                },
+                {
+                    unit: 'مقارنة الكسور', color: '#ec4899',
+                    text: `من خلال الأشكال أدناه. أي شكل تمثل الأجزاء المظللة فيه كسرًا أكبر من ${frac(3,6)} ؟`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:space-around;margin:3rem 0;gap:1rem;flex-wrap:wrap">
+                        <!-- Shape A -->
+                        <div style="text-align:center">
+                            <div style="font-size:2rem;font-weight:bold;margin-bottom:1rem">A</div>
+                            <svg width="120" height="80" viewBox="0 0 120 80">
+                                <rect x="0" y="0" width="40" height="40" fill="#ef4444" stroke="black" stroke-width="2"/>
+                                <rect x="0" y="40" width="40" height="40" fill="#ef4444" stroke="black" stroke-width="2"/>
+                                <rect x="40" y="0" width="40" height="40" fill="white" stroke="black" stroke-width="2"/>
+                                <rect x="40" y="40" width="40" height="40" fill="white" stroke="black" stroke-width="2"/>
+                                <rect x="80" y="0" width="40" height="40" fill="white" stroke="black" stroke-width="2"/>
+                                <rect x="80" y="40" width="40" height="40" fill="white" stroke="black" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <!-- Shape B -->
+                        <div style="text-align:center">
+                            <div style="font-size:2rem;font-weight:bold;margin-bottom:1rem">B</div>
+                            <svg width="120" height="80" viewBox="0 0 120 80">
+                                <rect x="0" y="0" width="40" height="40" fill="#a855f7" stroke="black" stroke-width="2"/>
+                                <rect x="40" y="0" width="40" height="40" fill="#a855f7" stroke="black" stroke-width="2"/>
+                                <rect x="80" y="0" width="40" height="40" fill="white" stroke="black" stroke-width="2"/>
+                                <rect x="0" y="40" width="40" height="40" fill="white" stroke="black" stroke-width="2"/>
+                                <rect x="40" y="40" width="40" height="40" fill="white" stroke="black" stroke-width="2"/>
+                                <rect x="80" y="40" width="40" height="40" fill="#a855f7" stroke="black" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <!-- Shape C -->
+                        <div style="text-align:center">
+                            <div style="font-size:2rem;font-weight:bold;margin-bottom:1rem">C</div>
+                            <svg width="120" height="80" viewBox="0 0 120 80">
+                                <rect x="0" y="0" width="40" height="40" fill="#f97316" stroke="black" stroke-width="2"/>
+                                <rect x="40" y="0" width="40" height="40" fill="white" stroke="black" stroke-width="2"/>
+                                <rect x="80" y="0" width="40" height="40" fill="#f97316" stroke="black" stroke-width="2"/>
+                                <rect x="0" y="40" width="40" height="40" fill="#f97316" stroke="black" stroke-width="2"/>
+                                <rect x="40" y="40" width="40" height="40" fill="white" stroke="black" stroke-width="2"/>
+                                <rect x="80" y="40" width="40" height="40" fill="#f97316" stroke="black" stroke-width="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                    ${radioHTML('qnew13', ['A', 'B', 'C'])}`,
+                    check: () => document.querySelector('input[name="qnew13"]:checked')?.value === '2',
+                    ansText: `C`
+                },
+                {
+                    unit: 'مقارنة الكسور', color: '#ec4899',
+                    text: `قارن بين الكسرين أدناه باستعمال > أو < أو = . (يمكنك استخدام شرائط الكسور)`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:2rem 0">
+                        <svg width="400" height="120" viewBox="0 0 400 120">
+                            <g transform="translate(50, 10)">
+                                <rect x="0" y="0" width="300" height="30" fill="#dc2626" stroke="black" stroke-width="1.5"/>
+                                <text x="150" y="21" text-anchor="middle" fill="white" font-weight="bold" font-size="18">1</text>
+                                
+                                <g transform="translate(0, 30)">
+                                    ${[0,1,2].map(i => `
+                                    <rect x="${i*37.5}" y="0" width="37.5" height="30" fill="#2563eb" stroke="black" stroke-width="1.5"/>
+                                    ${sFrac(i*37.5 + 18.75, 15, '1', '8', 11)}
+                                    `).join('')}
+                                </g>
+        
+                                <g transform="translate(0, 60)">
+                                    ${[0,1,2,3].map(i => `
+                                    <rect x="${i*37.5}" y="0" width="37.5" height="30" fill="#2563eb" stroke="black" stroke-width="1.5"/>
+                                    ${sFrac(i*37.5 + 18.75, 15, '1', '8', 11)}
+                                    `).join('')}
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:3.5rem;font-weight:bold;margin-bottom:2rem" dir="ltr">
+                        ${frac(3, 8)} <div style="display:inline-block;width:55px;height:55px;border:3px solid #1e3a8a;border-radius:50%;text-align:center;line-height:49px;font-size:2.5rem;color:#dc2626">?</div> ${frac(4, 8)}
+                    </div>
+                    ${radioHTML('qnew14', ['&lt;', '&gt;', '='])}`,
+                    check: () => document.querySelector('input[name="qnew14"]:checked')?.value === '0',
+                    ansText: `<`
+                },
+                {
+                    unit: 'مقارنة الكسور', color: '#ec4899',
+                    text: `قارن بين الكسرين أدناه باستعمال > أو < أو = . (يمكنك استخدام خطوط الأعداد)`,
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:3rem 0 2rem">
+                        <svg width="450" height="155" viewBox="0 -15 450 155">
+                            <!-- Top Line (Halves) -->
+                            <line x1="30" y1="30" x2="420" y2="30" stroke="black" stroke-width="2"/>
+                            <polygon points="30,30 38,26 38,34" fill="black"/>
+                            <polygon points="420,30 412,26 412,34" fill="black"/>
+                            
+                            <line x1="40" y1="23" x2="40" y2="37" stroke="black" stroke-width="2"/>
+                            <text x="40" y="15" text-anchor="middle" font-weight="bold" font-size="16">0</text>
+                            
+                            <line x1="230" y1="23" x2="230" y2="37" stroke="black" stroke-width="2"/>
+                            ${sFrac(230, 10, '1', '2', 12, 'black')}
+                            
+                            <line x1="420" y1="23" x2="420" y2="37" stroke="black" stroke-width="2"/>
+                            <text x="420" y="15" text-anchor="middle" font-weight="bold" font-size="16">1</text>
+        
+                            <!-- Bottom Line (Fourths) -->
+                            <line x1="30" y1="90" x2="420" y2="90" stroke="black" stroke-width="2"/>
+                            <polygon points="30,90 38,86 38,94" fill="black"/>
+                            <polygon points="420,90 412,86 412,94" fill="black"/>
+                            
+                            <line x1="40" y1="83" x2="40" y2="97" stroke="black" stroke-width="2"/>
+                            <text x="40" y="75" text-anchor="middle" font-weight="bold" font-size="16">0</text>
+                            
+                            ${[1,2,3].map(i => `
+                            <line x1="${40 + i*95}" y1="83" x2="${40 + i*95}" y2="97" stroke="black" stroke-width="2"/>
+                            ${sFrac(40 + i*95, 120, i, 4, 12, 'black')}
+                            `).join('')}
+                            
+                            <line x1="420" y1="83" x2="420" y2="97" stroke="black" stroke-width="2"/>
+                            <text x="420" y="75" text-anchor="middle" font-weight="bold" font-size="16">1</text>
+                        </svg>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:3.5rem;font-weight:bold;margin-bottom:2rem" dir="ltr">
+                        ${frac(1, 2)} <div style="display:inline-block;width:55px;height:55px;border:3px solid #1e3a8a;border-radius:50%;text-align:center;line-height:49px;font-size:2.5rem;color:#dc2626">?</div> ${frac(3, 4)}
+                    </div>
+                    ${radioHTML('qnew15', ['&lt;', '&gt;', '='])}`,
+                    check: () => document.querySelector('input[name="qnew15"]:checked')?.value === '0',
+                    ansText: `<`
+                }
+            ]
+        };
+
+        // ── Game Logic & States Engine ──────────────────────────────────────
+        const GameEngine = (() => {
+            let currentLevel = 1;
+            let currentQIndex = 0;
+            let levelScore = 0;
+            let userProgress = { level1: false, level2: false, level3: false };
+
+            const el = id => document.getElementById(id);
+
+            function loadProgress() {
+                try {
+                    const saved = localStorage.getItem('furqan_g3_fractions_progress');
+                    if (saved) {
+                        userProgress = JSON.parse(saved);
+                    }
+                } catch (e) {
+                    console.log('Progress load error:', e);
+                }
+                updateDashboardUI();
+            }
+
+            function saveProgress() {
+                try {
+                    localStorage.setItem('furqan_g3_fractions_progress', JSON.stringify(userProgress));
+                } catch (e) {
+                    console.log('Progress save error:', e);
+                }
+                updateDashboardUI();
+            }
+
+            function updateDashboardUI() {
+                // Card Level 2 Unlock
+                const card2 = el('card-level-2');
+                const lock2 = el('lock-icon-level-2');
+                const status2 = el('status-level-2');
+                if (userProgress.level1) {
+                    card2.classList.remove('locked');
+                    card2.classList.add('unlocked');
+                    if (lock2) lock2.style.display = 'none';
+                    status2.textContent = 'جاهز للعب 🔓';
+                    status2.style.background = '#fef3c7';
+                    status2.style.color = '#92400e';
+                } else {
+                    card2.classList.add('locked');
+                    card2.classList.remove('unlocked');
+                    if (lock2) lock2.style.display = 'block';
+                    status2.textContent = 'مغلق 🔒';
+                }
+
+                // Card Level 3 Unlock
+                const card3 = el('card-level-3');
+                const lock3 = el('lock-icon-level-3');
+                const status3 = el('status-level-3');
+                if (userProgress.level2) {
+                    card3.classList.remove('locked');
+                    card3.classList.add('unlocked');
+                    if (lock3) lock3.style.display = 'none';
+                    status3.textContent = 'جاهز للعب 🔓';
+                    status3.style.background = '#fee2e2';
+                    status3.style.color = '#991b1b';
+                } else {
+                    card3.classList.add('locked');
+                    card3.classList.remove('unlocked');
+                    if (lock3) lock3.style.display = 'block';
+                    status3.textContent = 'مغلق 🔒';
+                }
+
+                // Completing final level
+                if (userProgress.level3) {
+                    status3.textContent = '🌟 مكتمل بنجاح!';
+                    status3.style.background = '#d1fae5';
+                    status3.style.color = '#065f46';
+                }
+            }
+
+            function showMap() {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                el('screen-map').classList.add('active');
+                loadProgress();
+            }
+
+            function startLevel(lvl) {
+                if (lvl === 2 && !userProgress.level1) return;
+                if (lvl === 3 && !userProgress.level2) return;
+
+                currentLevel = lvl;
+                currentQIndex = 0;
+                levelScore = 0;
+
+                const lvlNames = { 1: '⚔️ مستوى الفرسان', 2: '🛡️ مستوى الأبطال', 3: '🧬 مستوى العباقرة' };
+                el('level-display-name').textContent = lvlNames[lvl];
+
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                el('screen-game').classList.add('active');
+
+                renderQuestion();
+            }
+
+            function replayLevel() {
+                startLevel(currentLevel);
+            }
+
+            function renderQuestion() {
+                const list = GAME_DB['level' + currentLevel];
+                const q = list[currentQIndex];
+
+                // Badges/Text
+                el('q-badge-unit').textContent = q.unit;
+                el('q-badge-unit').style.background = q.color;
+                el('q-text-content').innerHTML = q.text;
+
+                // Game bar status
+                el('stat-progress').textContent = `${currentQIndex + 1} / ${list.length}`;
+                el('stat-score').textContent = `💎 ${levelScore}`;
+
+                const progressPct = ((currentQIndex + 1) / list.length) * 100;
+                el('stat-progressbar').style.width = `${progressPct}%`;
+
+                // Actions hide/show
+                el('game-feedback').className = 'feedback hidden';
+                el('btn-check').classList.remove('hidden');
+                el('btn-next').classList.add('hidden');
+
+                // Render Input Area
+                const area = el('q-input-area');
+                area.innerHTML = q.html;
+            }
+
+            function getCorrectRadioIndex(q) {
+                const radios = document.querySelectorAll('#q-input-area input[type="radio"]');
+                if (!radios.length) return null;
+                
+                // Save current checked state
+                const originalCheckedIndex = Array.from(radios).findIndex(r => r.checked);
+                
+                let correctIndex = null;
+                for (let i = 0; i < radios.length; i++) {
+                    radios.forEach((r, idx) => r.checked = (idx === i));
+                    if (q.check()) {
+                        correctIndex = i;
+                        break;
+                    }
+                }
+                
+                // Restore
+                radios.forEach((r, idx) => r.checked = (idx === originalCheckedIndex));
+                return correctIndex;
+            }
+
+            function checkAnswer() {
+                const list = GAME_DB['level' + currentLevel];
+                const q = list[currentQIndex];
+                
+                if (q.type === 'mcq') {
+                    const checkedRadio = document.querySelector('#q-input-area input[type="radio"]:checked');
+                    if (!checkedRadio) {
+                        alert('الرجاء اختيار إجابة أولاً!');
+                        return;
+                    }
+                } else {
+                    // Check if all selects are filled
+                    const selects = document.querySelectorAll('#q-input-area select');
+                    let allFilled = true;
+                    selects.forEach(sel => {
+                        if (!sel.value) allFilled = false;
+                    });
+                    if (!allFilled) {
+                        alert('الرجاء الإجابة على جميع الفراغات المطلوبة أولاً!');
+                        return;
+                    }
+                }
+
+                const isCorrect = q.check();
+
+                if (q.type === 'mcq') {
+                    const radios = document.querySelectorAll('#q-input-area input[type="radio"]');
+                    const correctIdx = getCorrectRadioIndex(q);
+                    
+                    radios.forEach((r, i) => {
+                        r.disabled = true;
+                        const label = r.parentElement;
+                        if (i === correctIdx) {
+                            label.classList.add('correct');
+                        } else if (r.checked && !isCorrect) {
+                            label.classList.add('incorrect');
+                        }
+                    });
+                } else {
+                    const selects = document.querySelectorAll('#q-input-area select');
+                    selects.forEach(sel => {
+                        sel.disabled = true;
+                        sel.classList.add(isCorrect ? 'valid' : 'invalid');
+                    });
+                }
+
+                const fb = el('game-feedback');
+                fb.classList.remove('hidden');
+
+                if (isCorrect) {
+                    levelScore += 2;
+                    fb.innerHTML = '🌟 إجابة صحيحة! أحسنت يا بطل.';
+                    fb.className = 'feedback fb-ok';
+                } else {
+                    fb.innerHTML = `❌ إجابة خاطئة. الإجابة الصحيحة هي: <b style="background:white;padding:4px 12px;border-radius:8px;margin:0 6px;display:inline-block;color:#0f172a" dir="ltr">${q.ansText}</b>`;
+                    fb.className = 'feedback fb-err';
+                }
+
+                el('btn-check').classList.add('hidden');
+                el('btn-next').classList.remove('hidden');
+            }
+
+            function nextQuestion() {
+                const list = GAME_DB['level' + currentLevel];
+                currentQIndex++;
+
+                if (currentQIndex < list.length) {
+                    renderQuestion();
+                } else {
+                    showLevelFinished();
+                }
+            }
+
+            function showLevelFinished() {
+                const list = GAME_DB['level' + currentLevel];
+                const maxPoints = list.length * 2;
+                const percentage = Math.round((levelScore / maxPoints) * 100);
+
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+                if (percentage >= 80) {
+                    // Success!
+                    if (currentLevel === 1) userProgress.level1 = true;
+                    if (currentLevel === 2) userProgress.level2 = true;
+                    if (currentLevel === 3) userProgress.level3 = true;
+
+                    saveProgress();
+
+                    el('screen-success').classList.add('active');
+                    el('success-score').textContent = `${levelScore} / ${maxPoints} نقطة (${percentage}%)`;
+
+                    const finalLvl = (currentLevel === 3);
+                    el('success-title').textContent = finalLvl ? '🎖️ البطل الخارق المتوج 🏆' : '🎉 تهانينا! فتحت تحدي المستوى التالي!';
+                    el('success-desc').textContent = finalLvl ? 'لقد أثبتت أنك عبقري حقيقي وأنهيت جميع مستويات المراجعة الشاملة للكسور المتكافئة!' : 'عمل بطولي ممتاز! المستوى التالي مفتوح الآن في خريطتك.';
+                    el('btn-success-action').textContent = finalLvl ? 'خريطة المستويات 🗺️' : 'الانتقال إلى المستوى التالي ➡️';
+                    el('btn-success-action').onclick = finalLvl ? () => showMap() : () => startLevel(currentLevel + 1);
+
+                    Confetti.start();
+                } else {
+                    // Failure
+                    el('screen-fail').classList.add('active');
+                    el('fail-score').textContent = `${levelScore} / ${maxPoints} نقطة (${percentage}%)`;
+                }
+            }
+
+            function resetData() {
+                if (confirm('هل أنت متأكد من إعادة تعيين خريطة التحديات والمستويات بالكامل؟')) {
+                    userProgress = { level1: false, level2: false, level3: false };
+                    saveProgress();
+                }
+            }
+
+            return {
+                init: () => {
+                    loadProgress();
+                    showMap();
+                },
+                startLevel,
+                replayLevel,
+                checkAnswer,
+                nextQuestion,
+                showMap,
+                resetData
+            };
+        })();
+
+        // Auto initialization
+        window.addEventListener('DOMContentLoaded', GameEngine.init);
+    </script>
+</body>
+
+</html>
