@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي الوقت والسعة والكتلة - مدرسة روضة راشد</title>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e1b4b; /* Deep Indigo */
+            --primary-dark: #0f0e26;
+            --accent: #0ea5e9; /* Sky Blue */
+            --accent-dark: #0284c7;
+            --level1-color: #10b981; /* Emerald Green */
+            --level2-color: #f59e0b; /* Amber */
+            --level3-color: #ef4444; /* Rose Red */
+            --bg-gradient: linear-gradient(135deg, #e0f2fe, #f5f3ff);
+            --card-shadow: 0 15px 35px -5px rgba(30, 27, 75, 0.12);
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --radius: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Almarai', 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg-gradient);
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            direction: rtl;
+        }
+
+        /* Header styling */
+        .main-header {
+            background: linear-gradient(135deg, var(--primary), #312e81);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(30, 27, 75, 0.25);
+            border-bottom-left-radius: var(--radius);
+            border-bottom-right-radius: var(--radius);
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-header h1 {
+            margin: 0 0 0.5rem;
+            font-size: 2.1rem;
+            font-weight: 900;
+            font-family: 'Tajawal', sans-serif;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .main-header p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Screen Wrapper */
+        .screen {
+            display: none;
+            width: 100%;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Dashboard Map Layout */
+        .map-banner {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.8rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            border: 2px solid #e2e8f0;
+        }
+
+        .map-banner h2 {
+            margin: 0 0 0.6rem;
+            color: var(--primary);
+            font-size: 1.7rem;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 800;
+        }
+
+        .map-banner p {
+            margin: 0;
+            color: #475569;
+            font-weight: bold;
+            font-size: 1.05rem;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .level-card {
+            background: var(--glass-bg);
+            border-radius: var(--radius);
+            padding: 2.2rem 1.6rem;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            border: 3.5px solid #cbd5e1;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .level-card.unlocked:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 45px -10px rgba(30, 27, 75, 0.2);
+        }
+
+        .level-card.locked {
+            opacity: 0.65;
+            cursor: not-allowed;
+            background: #e2e8f0;
+        }
+
+        .level-card.level-1 { border-color: var(--level1-color); }
+        .level-card.level-2 { border-color: var(--level2-color); }
+        .level-card.level-3 { border-color: var(--level3-color); }
+
+        .level-badge {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .level-card.level-1 .level-badge { background: var(--level1-color); }
+        .level-card.level-2 .level-badge { background: var(--level2-color); }
+        .level-card.level-3 .level-badge { background: var(--level3-color); }
+        .level-card.locked .level-badge { background: #94a3b8; }
+
+        .level-title {
+            font-size: 1.45rem;
+            font-weight: 800;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .level-desc {
+            font-size: 0.95rem;
+            color: #475569;
+            margin: 0;
+            line-height: 1.6;
+            flex: 1;
+            font-weight: bold;
+        }
+
+        .level-status {
+            font-weight: 800;
+            font-size: 1rem;
+            padding: 0.5rem 1.4rem;
+            border-radius: 999px;
+            margin-top: 0.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .level-card.level-1 .level-status { background: #d1fae5; color: #065f46; }
+        .level-card.level-2 .level-status { background: #fef3c7; color: #92400e; }
+        .level-card.level-3 .level-status { background: #fee2e2; color: #991b1b; }
+        .level-card.locked .level-status { background: #cbd5e1; color: #475569; }
+
+        .lock-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 1.6rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        /* Action Buttons */
+        .btn {
+            font-size: 1.25rem;
+            font-weight: 800;
+            padding: 1rem 2.2rem;
+            border-radius: 18px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-dark); }
+        .btn-success { background: var(--level1-color); color: white; }
+        .btn-success:hover { background: #059669; }
+        .btn-secondary { background: #64748b; color: white; }
+        .btn-secondary:hover { background: #475569; }
+        .btn-warning { background: var(--level2-color); color: white; }
+        .btn-warning:hover { background: #d97706; }
+
+        /* Game Header Bar */
+        .game-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 1.2rem 1.8rem;
+            border-radius: var(--radius);
+            border: 2px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.8rem;
+        }
+
+        .game-bar-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .game-bar-stats {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .stat-badge {
+            font-size: 1.15rem;
+            font-weight: 800;
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 0.5rem 1.2rem;
+            border-radius: 14px;
+            border: 2px solid #bfdbfe;
+        }
+
+        /* Question Layout */
+        .q-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2.2rem;
+            box-shadow: var(--card-shadow);
+            border: 2.5px solid #cbd5e1;
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+
+        .q-badge {
+            position: absolute;
+            top: -14px;
+            right: 28px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: white;
+            padding: 0.4rem 1.4rem;
+            border-radius: 999px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+
+        .q-text {
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.6;
+            margin-bottom: 1.8rem;
+            text-align: center;
+        }
+
+        /* Options Buttons Layout */
+        #q-input-area label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.55rem !important;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 14px 24px !important;
+            border: 2.5px solid #cbd5e1 !important;
+            border-radius: 16px !important;
+            background: white !important;
+            width: 100% !important;
+            max-width: 420px !important;
+            margin: 0 auto 12px !important;
+            box-sizing: border-box !important;
+            transition: all 0.2s ease !important;
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            text-align: right;
+        }
+
+        #q-input-area label:hover {
+            border-color: var(--accent) !important;
+            background: #f0f9ff !important;
+            transform: translateY(-2px);
+        }
+
+        #q-input-area label:has(input[type="radio"]:checked) {
+            border-color: var(--accent) !important;
+            background: #e0f2fe !important;
+            color: #0369a1 !important;
+            box-shadow: 0 4px 10px rgba(14, 165, 233, 0.15);
+        }
+
+        #q-input-area label.correct {
+            border-color: var(--level1-color) !important;
+            background: #d1fae5 !important;
+            color: #065f46 !important;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15) !important;
+        }
+
+        #q-input-area label.incorrect {
+            border-color: var(--level3-color) !important;
+            background: #fee2e2 !important;
+            color: #991b1b !important;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.15) !important;
+        }
+
+        #q-input-area label input[type="radio"] {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--accent);
+            cursor: pointer;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        /* SVG drawings container styles */
+        svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Feedback styling */
+        .feedback {
+            margin-top: 1.8rem;
+            padding: 1.4rem 2rem;
+            border-radius: 18px;
+            text-align: center;
+            font-size: 1.35rem;
+            font-weight: 800;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fb-ok { background: #d1fae5; color: #065f46; border: 3px solid #34d399; }
+        .fb-err { background: #fee2e2; color: #991b1b; border: 3px solid #f87171; }
+
+        /* Game Footer Actions */
+        .game-footer {
+            display: flex;
+            justify-content: flex-start;
+            gap: 1.2rem;
+            margin-top: 1.2rem;
+            padding-top: 1.2rem;
+            border-top: 2.5px solid #e2e8f0;
+        }
+
+        /* Score summary cards */
+        .summary-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            border: 3.5px solid #cbd5e1;
+            max-width: 600px;
+            width: 100%;
+            margin: 2rem auto;
+        }
+
+        .summary-title {
+            font-size: 2.1rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 0 0 1.2rem;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .summary-score-badge {
+            font-size: 2.6rem;
+            font-weight: 900;
+            color: var(--accent-dark);
+            background: #eff6ff;
+            padding: 1.4rem 3.5rem;
+            border-radius: 22px;
+            display: inline-block;
+            border: 3.5px solid #bfdbfe;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 5px 15px rgba(2, 132, 199, 0.1);
+        }
+
+        /* Confetti canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <h1>🏆 تحدي الوقت والسعة والكتلة</h1>
+            <p>الصف الثالث الابتدائي - مدرسة روضة راشد</p>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- 1. MAP DASHBOARD SCREEN -->
+        <section id="screen-map" class="screen active">
+            <div class="map-banner">
+                <h2>أهلاً بك يا بطل الرياضيات في تحدي القياس! 🗺️</h2>
+                <p>تجاوز كل مستوى بنجاح (بنسبة 80% أو أكثر) لفتح المستوى التالي والوصول لمرتبة العباقرة!</p>
+            </div>
+
+            <div class="levels-grid">
+                <!-- Level 1 -->
+                <div class="level-card level-1 unlocked" id="card-level-1" onclick="GameEngine.startLevel(1)">
+                    <div class="level-badge">🟢</div>
+                    <h3 class="level-title">مستوى الفرسان ⚔️</h3>
+                    <p class="level-desc">7 أسئلة موضوعية لتقدير السعة والكتلة، وقراءة الساعات البسيطة وحساب حجم السوائل.</p>
+                    <div class="level-status" id="status-level-1">جاهز للعب 🔓</div>
+                </div>
+
+                <!-- Level 2 -->
+                <div class="level-card level-2 locked" id="card-level-2" onclick="GameEngine.startLevel(2)">
+                    <div class="lock-overlay" id="lock-icon-level-2">🔒</div>
+                    <div class="level-badge">🟡</div>
+                    <h3 class="level-title">مستوى الأبطال 🛡️</h3>
+                    <p class="level-desc">7 أسئلة لحساب كتل الأوزان وقراءة الساعات الدقيقة والتحويل الرقمي للوقت.</p>
+                    <div class="level-status" id="status-level-2">مغلق 🔒</div>
+                </div>
+
+                <!-- Level 3 -->
+                <div class="level-card level-3 locked" id="card-level-3" onclick="GameEngine.startLevel(3)">
+                    <div class="lock-overlay" id="lock-icon-level-3">🔒</div>
+                    <div class="level-badge">🔴</div>
+                    <h3 class="level-title">مستوى العباقرة 🧬</h3>
+                    <p class="level-desc">8 مسائل متطورة لحساب الوقت المنقضي، تحديد أوقات البداية والنهاية، وحل مسائل السعة المعقدة.</p>
+                    <div class="level-status" id="status-level-3">مغلق 🔒</div>
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+                <button onclick="GameEngine.resetData()" class="btn btn-secondary">إعادة تعيين التقدم 🔄</button>
+            </div>
+        </section>
+
+        <!-- 2. GAME SCREEN (QUESTIONS) -->
+        <section id="screen-game" class="screen">
+            <div class="game-bar">
+                <div class="game-bar-title" id="level-display-name">المستوى الأول</div>
+                <div class="game-bar-stats">
+                    <span class="stat-badge" id="stat-progress">1 / 7</span>
+                    <span class="stat-badge" id="stat-score">💎 0</span>
+                </div>
+            </div>
+
+            <div style="background:#e2e8f0;border-radius:999px;height:12px;margin-bottom:1.8rem;overflow:hidden">
+                <div id="stat-progressbar" style="height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:999px;transition:width 0.4s ease;width:14%"></div>
+            </div>
+
+            <!-- Content Card -->
+            <div class="q-card">
+                <div class="q-badge" id="q-badge-unit">الوحدة 11</div>
+                <div class="q-text" id="q-text-content">نص السؤال</div>
+                <div id="q-input-area">إدخال السؤال</div>
+            </div>
+
+            <!-- Feedback -->
+            <div id="game-feedback" class="feedback hidden">التغذية الراجعة</div>
+
+            <!-- Game Actions -->
+            <div class="game-footer">
+                <button id="btn-check" class="btn btn-primary" onclick="GameEngine.checkAnswer()">تحقق ✅</button>
+                <button id="btn-next" class="btn btn-success hidden" onclick="GameEngine.nextQuestion()">التالي ➡️</button>
+                <button id="btn-back-map" class="btn btn-secondary" onclick="GameEngine.showMap()">خريطة المستويات 🗺️</button>
+            </div>
+        </section>
+
+        <!-- 3. LEVEL SUCCESS SCREEN -->
+        <section id="screen-success" class="screen">
+            <div class="summary-card">
+                <div style="font-size:5.5rem; margin-bottom:1rem;">🎉</div>
+                <h2 class="summary-title" id="success-title">نجاح باهر!</h2>
+                <p style="font-size:1.4rem; font-weight:bold; color:#4b5563; margin-bottom:1.5rem;" id="success-desc">لقد تجاوزت هذا المستوى بنجاح!</p>
+                <div class="summary-score-badge" id="success-score">0 / 0 نقطة</div>
+                <div style="display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap;">
+                    <button id="btn-success-action" class="btn btn-success" onclick="GameEngine.showMap()">العودة للخريطة 🗺️</button>
+                    <button class="btn btn-secondary" onclick="GameEngine.replayLevel()">إعادة المستوى 🔄</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. LEVEL FAILURE SCREEN -->
+        <section id="screen-fail" class="screen">
+            <div class="summary-card" style="border-color:var(--level3-color);">
+                <div style="font-size:5.5rem; margin-bottom:1rem;">😔</div>
+                <h2 class="summary-title" style="color:var(--level3-color);">لم تحصل على الدرجة المطلوبة</h2>
+                <p style="font-size:1.4rem; font-weight:bold; color:#4b5563; margin-bottom:1.5rem;">تحتاج إلى نسبة 80% على الأقل لفتح المستوى التالي.</p>
+                <div class="summary-score-badge" style="background:#fef2f2; border-color:#fca5a5; color:#991b1b;" id="fail-score">0 / 0 نقطة</div>
+                <div style="display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap;">
+                    <button class="btn btn-warning" onclick="GameEngine.replayLevel()">إعادة المحاولة 🔄</button>
+                    <button class="btn btn-secondary" onclick="GameEngine.showMap()">العودة للخريطة 🗺️</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Canvas for Confetti -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <script>
+        // ── Confetti Particle System ───────────────────────────────
+        const Confetti = (() => {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let animationFrameId = null;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * -canvas.height - 20;
+                    this.rotation = Math.random() * 360;
+                    this.rotationSpeed = Math.random() * 4 - 2;
+                    this.scale = Math.random() * 6 + 6;
+                    this.color = ['#10b981', '#f59e0b', '#ef4444', '#0ea5e9', '#8b5cf6'][Math.floor(Math.random() * 5)];
+                    this.speed = Math.random() * 3 + 4;
+                    this.wobble = Math.random() * 2 - 1;
+                    this.wobbleSpeed = Math.random() * 0.05 + 0.02;
+                    this.wobbleTime = 0;
+                }
+                update() {
+                    this.y += this.speed;
+                    this.rotation += this.rotationSpeed;
+                    this.wobbleTime += this.wobbleSpeed;
+                    this.x += Math.sin(this.wobbleTime) * this.wobble;
+                }
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate((this.rotation * Math.PI) / 180);
+                    ctx.scale(this.scale / 10, this.scale / 10);
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.rect(-10, -5, 20, 10);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            function loop() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p, idx) => {
+                    p.update();
+                    p.draw();
+                    if (p.y > canvas.height) {
+                        particles[idx] = new Particle();
+                    }
+                });
+                animationFrameId = requestAnimationFrame(loop);
+            }
+
+            function start() {
+                resize();
+                particles = Array.from({ length: 100 }, () => new Particle());
+                if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                loop();
+                setTimeout(() => {
+                    cancelAnimationFrame(animationFrameId);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }, 5000);
+            }
+
+            return { start };
+        })();
+
+        // ── Helper HTML Elements Generators ──────────────────────────────────
+        const wrapLtr = (text) => {
+            return text.replace(/([0-9a-zA-Z.:/+-]+(?:\s+[0-9a-zA-Z.:/+-]+)*)/g, match => {
+                if (/[a-zA-Z]/.test(match) || (/[0-9]/.test(match) && /[:.-]/.test(match))) {
+                    return `<span dir="ltr" style="display:inline-block">${match}</span>`;
+                }
+                return match;
+            });
+        };
+
+        const radioHTML = (name, opts) => 
+            `<div style="display:flex;flex-direction:column;gap:0.8rem;margin:1.5rem 0;align-items:center;width:100%">` + 
+            opts.map((opt, i) => `
+                <label>
+                    <input type="radio" name="${name}" value="${i}">
+                    <span>${wrapLtr(opt)}</span>
+                </label>
+            `).join('') + `</div>`;
+
+        // ── Dynamic SVG Generator Functions ───────────────────────────────
+        function makeClockSVG(h, m) {
+            let hrAngle = (h % 12) * 30 + m * 0.5;
+            let minAngle = m * 6;
+            let ticks = '';
+            for (let i = 1; i <= 12; i++) {
+                let angle = i * 30 * Math.PI / 180;
+                let x1 = 60 + 44 * Math.sin(angle);
+                let y1 = 60 - 44 * Math.cos(angle);
+                let x2 = 60 + 49 * Math.sin(angle);
+                let y2 = 60 - 49 * Math.cos(angle);
+                ticks += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#1e293b" stroke-width="1.5"/>`;
+                let tx = 60 + 35 * Math.sin(angle);
+                let ty = 63 - 35 * Math.cos(angle);
+                ticks += `<text x="${tx}" y="${ty}" text-anchor="middle" font-size="9" font-weight="bold" fill="#1e293b">${i}</text>`;
+            }
+            return `
+            <svg width="130" height="130" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="54" fill="#f8fafc" stroke="#1e1b4b" stroke-width="3"/>
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#cbd5e1" stroke-width="1"/>
+                ${ticks}
+                <line x1="60" y1="60" x2="${60 + 26 * Math.sin(hrAngle * Math.PI / 180)}" y2="${60 - 26 * Math.cos(hrAngle * Math.PI / 180)}" stroke="#1e1b4b" stroke-width="4.5" stroke-linecap="round"/>
+                <line x1="60" y1="60" x2="${60 + 38 * Math.sin(minAngle * Math.PI / 180)}" y2="${60 - 38 * Math.cos(minAngle * Math.PI / 180)}" stroke="#0ea5e9" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="60" cy="60" r="4.5" fill="#1e1b4b"/>
+                <circle cx="60" cy="60" r="1.5" fill="white"/>
+            </svg>
+            `;
+        }
+
+        function makeCylinderSVG(amount, maxAmount, unit) {
+            let fillHeight = (amount / maxAmount) * 90;
+            let fillY = 100 - fillHeight;
+            
+            let ticks = '';
+            let step = maxAmount === 1000 ? 100 : 1;
+            for (let val = step; val <= maxAmount; val += step) {
+                let ty = 10 + (100 - (val / maxAmount) * 90);
+                ticks += `<line x1="45" y1="${ty}" x2="55" y2="${ty}" stroke="#94a3b8" stroke-width="1"/>`;
+                if (maxAmount === 15) {
+                    if (val % 5 === 0) {
+                        ticks += `<text x="40" y="${ty+3}" text-anchor="end" font-size="8" font-weight="bold" fill="#64748b" direction="ltr">${val} L</text>`;
+                        ticks += `<line x1="40" y1="${ty}" x2="55" y2="${ty}" stroke="#64748b" stroke-width="1.2"/>`;
+                    }
+                } else {
+                    if (val === 500) {
+                        ticks += `<text x="40" y="${ty+3}" text-anchor="end" font-size="8" font-weight="bold" fill="#64748b" direction="ltr">500 mL</text>`;
+                        ticks += `<line x1="38" y1="${ty}" x2="55" y2="${ty}" stroke="#64748b" stroke-width="1.2"/>`;
+                    } else if (val === 1000) {
+                        ticks += `<text x="40" y="${ty+3}" text-anchor="end" font-size="8" font-weight="bold" fill="#64748b" direction="ltr">1 L</text>`;
+                        ticks += `<line x1="38" y1="${ty}" x2="55" y2="${ty}" stroke="#64748b" stroke-width="1.2"/>`;
+                    }
+                }
+            }
+            
+            let fillCol = '#38bdf8';
+            if (unit === 'lemon') fillCol = '#eab308';
+            if (unit === 'cherry') fillCol = '#ef4444';
+            
+            return `
+            <svg width="100" height="135" viewBox="0 0 100 130">
+                <rect x="55" y="10" width="30" height="100" fill="#f8fafc" stroke="#64748b" stroke-width="2" rx="4"/>
+                <rect x="56" y="${10 + fillY}" width="28" height="${fillHeight}" fill="${fillCol}" fill-opacity="0.8" rx="2"/>
+                ${ticks}
+                <line x1="80" y1="15" x2="80" y2="105" stroke="white" stroke-width="1.5" stroke-opacity="0.5"/>
+            </svg>
+            `;
+        }
+
+        function makeWeightSVG(weightStr) {
+            let size = 42;
+            let fill = '#94a3b8';
+            let fontSize = 10;
+            if (weightStr.includes('kg')) {
+                size = 56;
+                fill = '#64748b';
+                fontSize = 12;
+            } else if (weightStr.includes('10 g') || weightStr.includes('1 g')) {
+                size = 32;
+                fill = '#cbd5e1';
+                fontSize = 8.5;
+            }
+            
+            return `
+            <svg width="${size + 8}" height="${size + 15}" viewBox="0 0 ${size + 8} ${size + 15}" style="display:inline-block; margin: 3px;">
+                <circle cx="${(size+8)/2}" cy="10" r="6" fill="none" stroke="#475569" stroke-width="2.5"/>
+                <circle cx="${(size+8)/2}" cy="15" r="3" fill="#475569"/>
+                <rect x="4" y="18" width="${size}" height="${size - 6}" rx="5" fill="url(#grad-${weightStr.replace(' ', '')})" stroke="#475569" stroke-width="1.8"/>
+                <text x="${(size+8)/2}" y="${18 + (size-6)/2 + 4}" text-anchor="middle" font-size="${fontSize}" font-weight="extrabold" fill="#0f172a" direction="ltr">${weightStr}</text>
+                <defs>
+                    <linearGradient id="grad-${weightStr.replace(' ', '')}" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ffffff"/>
+                        <stop offset="30%" stop-color="${fill}"/>
+                        <stop offset="100%" stop-color="#334155"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            `;
+        }
+
+        function drawCartonSVG() {
+            return `
+            <svg width="80" height="85" viewBox="0 0 80 85">
+                <!-- Front face of carton -->
+                <rect x="25" y="28" width="24" height="45" fill="#475569" stroke="#1e293b" stroke-width="1.8" rx="1"/>
+                
+                <!-- Side face of carton -->
+                <polygon points="49,28 61,21 61,59 49,73" fill="#334155" stroke="#1e293b" stroke-width="1.8"/>
+                
+                <!-- Top sloped face of carton -->
+                <polygon points="25,28 37,21 61,21 49,28" fill="#64748b" stroke="#1e293b" stroke-width="1.8"/>
+                
+                <!-- Top gable fold -->
+                <polygon points="25,28 37,21 49,28" fill="#475569" stroke="#1e293b" stroke-width="1.5"/>
+                
+                <!-- Top fold line -->
+                <line x1="37" y1="21" x2="61" y2="21" stroke="#1e293b" stroke-width="1.8"/>
+                
+                <!-- Straw sticking out from top sloped face -->
+                <path d="M 45,23 L 49,11 Q 50.5,6 55,8 L 63,11" fill="none" stroke="#e2e8f0" stroke-width="3.5" stroke-linecap="round"/>
+                <path d="M 45,23 L 49,11 Q 50.5,6 55,8 L 63,11" fill="none" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="2,3"/>
+                
+                <!-- Apple logo on front face (centered at cx=37, cy=50) -->
+                <circle cx="34.5" cy="50" r="5" fill="#e2e8f0"/>
+                <circle cx="39.5" cy="50" r="5" fill="#e2e8f0"/>
+                <path d="M 31.5,54 C 34.5,56.5 39.5,56.5 42.5,54 Z" fill="#e2e8f0"/>
+                <!-- Apple stem and leaf -->
+                <path d="M 37,45 Q 38,41 41,40" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M 41,40 Q 44,40 45,37 Q 41,37 41,40" fill="#a7f3d0"/>
+            </svg>
+            `;
+        }
+
+        function drawLaptopSVG() {
+            return `
+            <svg width="90" height="70" viewBox="0 0 90 70">
+                <path d="M18,15 L72,15 L68,48 L22,48 Z" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
+                <rect x="10" y="48" width="70" height="7" rx="2" fill="#64748b" stroke="#475569" stroke-width="2"/>
+                <line x1="35" y1="52" x2="55" y2="52" stroke="#334155" stroke-width="2"/>
+            </svg>
+            `;
+        }
+
+        function drawGloveSVG() {
+            return `
+            <svg width="50" height="60" viewBox="0 0 50 60">
+                <path d="M15,48 L35,48 L35,28 C35,20 32,13 25,13 C18,13 15,20 15,28 Z" fill="#93c5fd" stroke="#2563eb" stroke-width="2"/>
+                <path d="M15,33 C10,33 8,26 12,23 C15,20 17,26 17,30 Z" fill="#93c5fd" stroke="#2563eb" stroke-width="2"/>
+                <rect x="13" y="45" width="24" height="8" rx="2" fill="#1d4ed8" stroke="#1e40af" stroke-width="2"/>
+            </svg>
+            `;
+        }
+
+        function drawYarnSVG() {
+            return `
+            <svg width="60" height="50" viewBox="0 0 60 50">
+                <circle cx="30" cy="25" r="20" fill="#d97706" stroke="#78350f" stroke-width="2"/>
+                <path d="M15,15 Q30,35 45,15 M15,35 Q30,15 45,35 M20,25 Q30,25 40,25 M30,10 L30,40" fill="none" stroke="#78350f" stroke-width="1.5"/>
+            </svg>
+            `;
+        }
+
+        function drawPenSVG() {
+            return `
+            <svg width="70" height="30" viewBox="0 0 70 30">
+                <rect x="15" y="10" width="40" height="8" fill="#f97316" stroke="#c2410c" stroke-width="1.5"/>
+                <polygon points="15,10 5,14 15,18" fill="#e2e8f0" stroke="#c2410c" stroke-width="1.5"/>
+                <rect x="55" y="9" width="8" height="10" rx="1" fill="#475569" stroke="#334155" stroke-width="1.5"/>
+            </svg>
+            `;
+        }
+
+        function drawOnionsSVG() {
+            return `
+            <svg width="70" height="60" viewBox="0 0 70 60">
+                <ellipse cx="35" cy="30" rx="25" ry="20" fill="#fca5a5" fill-opacity="0.3" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <circle cx="24" cy="24" r="8" fill="#fb923c" stroke="#ea580c"/>
+                <circle cx="42" cy="22" r="9" fill="#fca5a5" stroke="#f43f5e"/>
+                <circle cx="32" cy="36" r="8.5" fill="#f59e0b" stroke="#d97706"/>
+                <circle cx="48" cy="34" r="7.5" fill="#fb923c" stroke="#ea580c"/>
+            </svg>
+            `;
+        }
+
+        function drawDogSVG() {
+            return `
+            <svg width="70" height="60" viewBox="0 0 70 60">
+                <circle cx="35" cy="20" r="11" fill="#b45309" stroke="#78350f" stroke-width="1.8"/>
+                <path d="M25,12 C21,12 21,22 25,20 Z" fill="#78350f"/>
+                <path d="M45,12 C49,12 49,22 45,20 Z" fill="#78350f"/>
+                <ellipse cx="35" cy="24" rx="4" ry="2.5" fill="#f59e0b"/>
+                <circle cx="35" cy="23.2" r="1.2" fill="black"/>
+                <circle cx="31" cy="18" r="1.3" fill="black"/>
+                <circle cx="39" cy="18" r="1.3" fill="black"/>
+                <rect x="27" y="31" width="16" height="18" rx="4" fill="#b45309" stroke="#78350f" stroke-width="1.8"/>
+                <line x1="30" y1="49" x2="30" y2="56" stroke="#78350f" stroke-width="2.5"/>
+                <line x1="40" y1="49" x2="40" y2="56" stroke="#78350f" stroke-width="2.5"/>
+            </svg>
+            `;
+        }
+
+        function drawFootballSVG() {
+            return `
+            <svg width="55" height="55" viewBox="0 0 55 55">
+                <circle cx="27" cy="27" r="22" fill="white" stroke="#1e293b" stroke-width="2.5"/>
+                <polygon points="27,20 31,23 30,28 24,28 23,23" fill="#1e293b"/>
+                <polygon points="27,6 30,11 24,11" fill="#1e293b" fill-opacity="0.3"/>
+                <polygon points="11,27 16,24 14,31" fill="#1e293b"/>
+                <polygon points="43,27 38,24 40,31" fill="#1e293b"/>
+            </svg>
+            `;
+        }
+
+        function drawBottleSVG() {
+            return `
+            <svg width="50" height="70" viewBox="0 0 50 70">
+                <path d="M20,10 L30,10 L30,17 L37,23 L37,60 L13,60 L13,23 L20,17 Z" fill="#fb923c" stroke="#c2410c" stroke-width="2"/>
+                <rect x="18" y="5" width="14" height="5" rx="1" fill="#ea580c"/>
+                <rect x="17" y="30" width="16" height="18" fill="white" fill-opacity="0.8" rx="2"/>
+                <circle cx="25" cy="39" r="4.5" fill="#f97316"/>
+            </svg>
+            `;
+        }
+
+        function drawDropperSVG() {
+            return `
+            <svg width="40" height="70" viewBox="0 0 40 70">
+                <rect x="17" y="22" width="6" height="32" rx="1" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
+                <path d="M13,10 L27,10 L25,22 L15,22 Z" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/>
+                <path d="M17,54 L23,54 L20,64 Z" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
+            </svg>
+            `;
+        }
+
+        function drawJarSVG() {
+            return `
+            <svg width="45" height="70" viewBox="0 0 45 70">
+                <rect x="10" y="15" width="25" height="48" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                <rect x="15" y="7" width="15" height="8" rx="2" fill="#1e40af" stroke="#1d4ed8" stroke-width="2"/>
+                <line x1="10" y1="28" x2="35" y2="28" stroke="#bfdbfe" stroke-width="1.5"/>
+                <line x1="10" y1="39" x2="35" y2="39" stroke="#bfdbfe" stroke-width="1.5"/>
+                <line x1="10" y1="50" x2="35" y2="50" stroke="#bfdbfe" stroke-width="1.5"/>
+            </svg>
+            `;
+        }
+
+        function drawSpoonSVG() {
+            return `
+            <svg width="60" height="40" viewBox="0 0 60 40">
+                <ellipse cx="20" cy="20" rx="13" ry="9" fill="#cbd5e1" stroke="#64748b" stroke-width="2"/>
+                <path d="M33,20 L53,20" stroke="#64748b" stroke-width="4.5" stroke-linecap="round"/>
+            </svg>
+            `;
+        }
+
+        function drawFishTankSVG() {
+            return `
+            <svg width="80" height="50" viewBox="0 0 80 50">
+                <rect x="5" y="5" width="70" height="40" rx="3" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.2"/>
+                <rect x="6" y="18" width="68" height="26" fill="#38bdf8" fill-opacity="0.6" rx="1"/>
+                <path d="M46,28 C49,26 53,26 56,28 C58,29 60,31 62,29 C62,29 61,32 63,33 C60,32 58,34 56,32 C53,34 49,34 46,32 Z" fill="#f97316"/>
+            </svg>
+            `;
+        }
+
+        // ── Question Database ────────────────────────────────────────────────
+        const GAME_DB = {
+            level1: [
+                {
+                    unit: 'قراءة الوقت',
+                    text: 'ما الوقت الموضح على الساعة أدناه؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        ${makeClockSVG(2, 16)}
+                    </div>
+                    ${radioHTML('q1', ['16 دقيقة بعد الساعة 2', '44 دقيقة قبل الساعة 4', '13 دقيقة بعد الساعة 3'])}`,
+                    check: () => document.querySelector('input[name="q1"]:checked')?.value === '0',
+                    ansText: '16 دقيقة بعد الساعة 2 (حيث يشير عقرب الساعات بعد 2 وعقرب الدقائق عند 16 دقيقة)'
+                },
+                {
+                    unit: 'حساب الزمن المنقضي',
+                    text: 'إذا كان وقت البداية 11:00 a.m. ووقت النهاية 4:00 p.m. فما هو الزمن المنقضي؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;gap:1.5rem;margin:1.5rem 0;background:#f8fafc;padding:12px;border-radius:12px;border:1.5px dashed #cbd5e1;font-weight:bold;font-size:1.15rem;direction:ltr;">
+                        <div>Start: 11:00 a.m.</div>
+                        <div>End: 4:00 p.m.</div>
+                    </div>
+                    ${radioHTML('q2', ['4 ساعات', '5 ساعات', '7 ساعات'])}`,
+                    check: () => document.querySelector('input[name="q2"]:checked')?.value === '1',
+                    ansText: '5 ساعات (من 11 صباحاً إلى 12 ظهراً = ساعة واحدة، ومن 12 ظهراً إلى 4 عصراً = 4 ساعات، المجموع = 5 ساعات)'
+                },
+                {
+                    unit: 'قراءة الوقت',
+                    text: 'ما الوقت الموضح على الساعة أدناه؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        ${makeClockSVG(1, 20)}
+                    </div>
+                    ${radioHTML('q3', ['7 دقائق بعد الساعة 4', '20 دقيقة بعد الساعة 1', '20 دقيقة قبل الساعة 2'])}`,
+                    check: () => document.querySelector('input[name="q3"]:checked')?.value === '1',
+                    ansText: '20 دقيقة بعد الساعة 1 (الواحدة وثلث)'
+                },
+                {
+                    unit: 'تقدير السعة',
+                    text: 'ما التقدير الأفضل لسعة علبة العصير الصغيرة الموضحة أدناه؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        ${drawCartonSVG()}
+                    </div>
+                    ${radioHTML('q4', ['2 mL', '150 mL', '5 L'])}`,
+                    check: () => document.querySelector('input[name="q4"]:checked')?.value === '1',
+                    ansText: '150 mL (مليلتر مناسب للعلب الصغيرة)'
+                },
+                {
+                    unit: 'حسابات السعة',
+                    text: 'خلط عيسى عصير الليمون والكرز معاً ليُعدّ إبريقاً من عصير الفاكهة. أوجد كمية العصير التي أعدها عيسى بناءً على الكأسين أدناه:',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;gap:1.5rem;margin:1.5rem 0;">
+                        <div style="text-align:center;font-weight:bold;font-size:0.9rem;">
+                            ${makeCylinderSVG(400, 1000, 'lemon')}
+                            <div>عصير الليمون</div>
+                        </div>
+                        <div style="text-align:center;font-weight:bold;font-size:0.9rem;">
+                            ${makeCylinderSVG(500, 1000, 'cherry')}
+                            <div>عصير الكرز</div>
+                        </div>
+                    </div>
+                    ${radioHTML('q5', ['100 ML', '900 ML', '2 L 900 ML'])}`,
+                    check: () => document.querySelector('input[name="q5"]:checked')?.value === '1',
+                    ansText: '900 ML (400 mL + 500 mL = 900 mL)'
+                },
+                {
+                    unit: 'حسابات السعة',
+                    text: 'كمية الماء في الوعاء قبل تمرين كرة القدم كانت 12 L وبعد التمرين أصبحت 5 L. ما كمية الماء التي شربها الفريق؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;gap:1.5rem;margin:1.5rem 0;">
+                        <div style="text-align:center;font-weight:bold;font-size:0.85rem;">
+                            ${makeCylinderSVG(12, 15, 'water')}
+                            <div>قبل التمرين</div>
+                        </div>
+                        <div style="text-align:center;font-weight:bold;font-size:0.85rem;">
+                            ${makeCylinderSVG(5, 15, 'water')}
+                            <div>بعد التمرين</div>
+                        </div>
+                    </div>
+                    ${radioHTML('q6', ['6 لترات', '7 لترات', '9 لترات'])}`,
+                    check: () => document.querySelector('input[name="q6"]:checked')?.value === '1',
+                    ansText: '7 لترات (12 L - 5 L = 7 L)'
+                },
+                {
+                    unit: 'تقدير الكتلة',
+                    text: 'ما التقدير الأفضل لكتلة جهاز كمبيوتر محمول (Laptop)؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        ${drawLaptopSVG()}
+                    </div>
+                    ${radioHTML('q7', ['20 g', '2 kg', '30 kg'])}`,
+                    check: () => document.querySelector('input[name="q7"]:checked')?.value === '1',
+                    ansText: '2 kg (الكيلوجرام هو الأنسب للأجهزة الإلكترونية المحمولة)'
+                }
+            ],
+            level2: [
+                {
+                    unit: 'حساب الكتلة',
+                    text: 'ما إجمالي الكتلة التي تمثلها الأوزان المعدنية في الصورة أدناه؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;background:#f8fafc;padding:15px;border-radius:12px;border:1.5px dashed #cbd5e1;margin:1.5rem 0;">
+                        ${makeWeightSVG('1 kg')}
+                        ${makeWeightSVG('1 kg')}
+                        ${makeWeightSVG('500 g')}
+                        ${makeWeightSVG('100 g')}
+                    </div>
+                    ${radioHTML('q8', ['2 kg 500g', '2 kg 550 g', '2 kg 600g'])}`,
+                    check: () => document.querySelector('input[name="q8"]:checked')?.value === '2',
+                    ansText: '2 kg 600g (1kg + 1kg + 500g + 100g = 2kg 600g)'
+                },
+                {
+                    unit: 'حساب الكتلة',
+                    text: 'ما إجمالي الكتلة التي تمثلها الأوزان المعدنية في الصورة أدناه؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;background:#f8fafc;padding:15px;border-radius:12px;border:1.5px dashed #cbd5e1;margin:1.5rem 0;">
+                        ${makeWeightSVG('500 g')}
+                        ${makeWeightSVG('100 g')}
+                        ${makeWeightSVG('100 g')}
+                        <div style="display:flex;flex-direction:column;align-items:center;">
+                            ${makeWeightSVG('10 g')}
+                            ${makeWeightSVG('10 g')}
+                            ${makeWeightSVG('10 g')}
+                            ${makeWeightSVG('10 g')}
+                        </div>
+                    </div>
+                    ${radioHTML('q9', ['540g', '740 g', '900 g'])}`,
+                    check: () => document.querySelector('input[name="q9"]:checked')?.value === '1',
+                    ansText: '740 g (500g + 100g + 100g + 40g = 740g)'
+                },
+                {
+                    unit: 'قراءة الوقت',
+                    text: 'ما الوقت الموضح على ساعة العقارب أدناه بالصيغة الرقمية؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        ${makeClockSVG(10, 20)}
+                    </div>
+                    ${radioHTML('q10', ['10:20', '11:20', '10:40'])}`,
+                    check: () => document.querySelector('input[name="q10"]:checked')?.value === '0',
+                    ansText: '10:20 (العاشرة وعشرون دقيقة)'
+                },
+                {
+                    unit: 'قراءة الوقت',
+                    text: 'ما الوقت الموضح على ساعة العقارب أدناه بالصيغة الرقمية؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        ${makeClockSVG(8, 50)}
+                    </div>
+                    ${radioHTML('q11', ['9:10', '8:50', '8:10'])}`,
+                    check: () => document.querySelector('input[name="q11"]:checked')?.value === '1',
+                    ansText: '8:50 (الثامنة وخمسون دقيقة، أو التاسعة إلا عشر دقائق)'
+                },
+                {
+                    unit: 'قراءة الوقت',
+                    text: 'ما الوقت الموضح على ساعة العقارب أدناه بالصيغة الرقمية؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        ${makeClockSVG(6, 55)}
+                    </div>
+                    ${radioHTML('q12', ['6:55', '7:55', '6:11'])}`,
+                    check: () => document.querySelector('input[name="q12"]:checked')?.value === '0',
+                    ansText: '6:55 (السادسة وخمس وخمسون دقيقة، أو السابعة إلا خمس دقائق)'
+                },
+                {
+                    unit: 'الصيغة الرقمية للوقت',
+                    text: 'اكتب الوقت التالي بالصيغة الرقمية المناسبة: "12 دقيقة قبل الظهر"',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;background:#eff6ff;border:2px solid #bfdbfe;border-radius:12px;padding:12px 24px;font-size:1.4rem;font-weight:bold;">
+                        12 دقيقة قبل الظهر
+                    </div>
+                    ${radioHTML('q13', ['12:12 p.m.', '11:48 a.m.', '12:12 a.m.'])}`,
+                    check: () => document.querySelector('input[name="q13"]:checked')?.value === '1',
+                    ansText: '11:48 a.m. (قبل الظهر بـ 12 دقيقة، الظهر هو 12:00 p.m. نطرح 12 دقيقة فنحصل على 11:48 a.m.)'
+                },
+                {
+                    unit: 'الصيغة الرقمية للوقت',
+                    text: 'اكتب الوقت التالي بالصيغة الرقمية المناسبة: "21 دقيقة بعد الساعة 2"',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;background:#eff6ff;border:2px solid #bfdbfe;border-radius:12px;padding:12px 24px;font-size:1.4rem;font-weight:bold;">
+                        21 دقيقة بعد الساعة 2
+                    </div>
+                    ${radioHTML('q14', ['2:21', '2:09', '3:21'])}`,
+                    check: () => document.querySelector('input[name="q14"]:checked')?.value === '0',
+                    ansText: '2:21 (الثانية وواحد وعشرون دقيقة)'
+                }
+            ],
+            level3: [
+                {
+                    unit: 'الصيغة الرقمية للوقت',
+                    text: 'اكتب الوقت بالصيغة الرقمية المناسبة: "6 إلا 45 دقيقة"',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;background:#eff6ff;border:2px solid #bfdbfe;border-radius:12px;padding:12px 24px;font-size:1.4rem;font-weight:bold;">
+                        6 إلا 45 دقيقة
+                    </div>
+                    ${radioHTML('q15', ['6:45', '5:15', '5:45'])}`,
+                    check: () => document.querySelector('input[name="q15"]:checked')?.value === '1',
+                    ansText: '5:15 (الساعة 6 طرح 45 دقيقة = 5:15)'
+                },
+                {
+                    unit: 'الزمن المنقضي',
+                    text: 'أوجد الزمن المنقضي إذا كان وقت البداية 6:30 p.m. ووقت النهاية 9:50 p.m. :',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;gap:1.5rem;margin:1.5rem 0;background:#f8fafc;padding:12px;border-radius:12px;border:1.5px dashed #cbd5e1;font-weight:bold;font-size:1.1rem;direction:ltr;">
+                        <div>Start: 6:30 p.m.</div>
+                        <div>End: 9:50 p.m.</div>
+                    </div>
+                    ${radioHTML('q16', ['3 ساعات و20 دقيقة', 'ساعتان و20 دقيقة', '3 ساعات و50 دقيقة'])}`,
+                    check: () => document.querySelector('input[name="q16"]:checked')?.value === '0',
+                    ansText: '3 ساعات و20 دقيقة (من 6:30 إلى 9:30 = 3 ساعات، ومن 9:30 إلى 9:50 = 20 دقيقة)'
+                },
+                {
+                    unit: 'الزمن المنقضي',
+                    text: 'أوجد الزمن المنقضي إذا كان وقت البداية 9:15 a.m. ووقت النهاية 10:45 a.m. :',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;gap:1.5rem;margin:1.5rem 0;background:#f8fafc;padding:12px;border-radius:12px;border:1.5px dashed #cbd5e1;font-weight:bold;font-size:1.1rem;direction:ltr;">
+                        <div>Start: 9:15 a.m.</div>
+                        <div>End: 10:45 a.m.</div>
+                    </div>
+                    ${radioHTML('q17', ['ساعة و30 دقيقة', 'ساعة و15 دقيقة', 'ساعتان و30 دقيقة'])}`,
+                    check: () => document.querySelector('input[name="q17"]:checked')?.value === '0',
+                    ansText: 'ساعة و30 دقيقة (من 9:15 إلى 10:15 = ساعة، ومن 10:15 إلى 10:45 = 30 دقيقة)'
+                },
+                {
+                    unit: 'الزمن المنقضي',
+                    text: 'أوجد الزمن المنقضي إذا كان وقت البداية 3:30 p.m. ووقت النهاية 7:00 p.m. :',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;gap:1.5rem;margin:1.5rem 0;background:#f8fafc;padding:12px;border-radius:12px;border:1.5px dashed #cbd5e1;font-weight:bold;font-size:1.1rem;direction:ltr;">
+                        <div>Start: 3:30 p.m.</div>
+                        <div>End: 7:00 p.m.</div>
+                    </div>
+                    ${radioHTML('q18', ['3 ساعات و30 دقيقة', '4 ساعات', '3 ساعات'])}`,
+                    check: () => document.querySelector('input[name="q18"]:checked')?.value === '0',
+                    ansText: '3 ساعات و30 دقيقة (من 3:30 إلى 6:30 = 3 ساعات، ومن 6:30 إلى 7:00 = 30 دقيقة)'
+                },
+                {
+                    unit: 'وقت النهاية',
+                    text: 'أوجد وقت النهاية إذا كان وقت البداية 6:10 p.m. والزمن المنقضي هو 5 ساعات و25 دقيقة:',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;gap:1.5rem;margin:1.5rem 0;background:#f8fafc;padding:12px;border-radius:12px;border:1.5px dashed #cbd5e1;font-weight:bold;font-size:1.1rem;direction:ltr;">
+                        <div>Start: 6:10 p.m.</div>
+                        <div>Elapsed: 5h 25m</div>
+                    </div>
+                    ${radioHTML('q19', ['11:35 p.m.', '11:15 p.m.', '12:35 a.m.'])}`,
+                    check: () => document.querySelector('input[name="q19"]:checked')?.value === '0',
+                    ansText: '11:35 p.m. (6:10 + 5 ساعات = 11:10، وإضافة 25 دقيقة = 11:35 p.m.)'
+                },
+                {
+                    unit: 'وقت النهاية',
+                    text: 'أوجد وقت النهاية إذا كان وقت البداية 8:20 a.m. والزمن المنقضي هو 3 ساعات و15 دقيقة:',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;gap:1.5rem;margin:1.5rem 0;background:#f8fafc;padding:12px;border-radius:12px;border:1.5px dashed #cbd5e1;font-weight:bold;font-size:1.1rem;direction:ltr;">
+                        <div>Start: 8:20 a.m.</div>
+                        <div>Elapsed: 3h 15m</div>
+                    </div>
+                    ${radioHTML('q20', ['11:35 a.m.', '11:20 a.m.', '12:35 p.m.'])}`,
+                    check: () => document.querySelector('input[name="q20"]:checked')?.value === '0',
+                    ansText: '11:35 a.m. (8:20 + 3 ساعات = 11:20، وإضافة 15 دقيقة = 11:35 a.m.)'
+                },
+                {
+                    unit: 'وقت النهاية',
+                    text: 'أوجد وقت النهاية إذا كان وقت البداية 7:30 p.m. والزمن المنقضي هو ساعتان و20 دقيقة:',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;gap:1.5rem;margin:1.5rem 0;background:#f8fafc;padding:12px;border-radius:12px;border:1.5px dashed #cbd5e1;font-weight:bold;font-size:1.1rem;direction:ltr;">
+                        <div>Start: 7:30 p.m.</div>
+                        <div>Elapsed: 2h 20m</div>
+                    </div>
+                    ${radioHTML('q21', ['9:50 p.m.', '9:20 p.m.', '10:50 p.m.'])}`,
+                    check: () => document.querySelector('input[name="q21"]:checked')?.value === '0',
+                    ansText: '9:50 p.m. (7:30 + ساعتان = 9:30، وإضافة 20 دقيقة = 9:50 p.m.)'
+                },
+                {
+                    unit: 'حسابات الكتلة الإجمالية',
+                    text: 'ما إجمالي الكتلة التي تمثلها الأوزان الموضحة في الصورة أدناه؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;background:#f8fafc;padding:15px;border-radius:12px;border:1.5px dashed #cbd5e1;margin:1.5rem 0;">
+                        ${makeWeightSVG('1 kg')}
+                        ${makeWeightSVG('1 kg')}
+                        ${makeWeightSVG('100 g')}
+                        <div style="display:flex;flex-direction:column;align-items:center;margin: 0 10px;">
+                            ${makeWeightSVG('10 g')}
+                            ${makeWeightSVG('10 g')}
+                            ${makeWeightSVG('10 g')}
+                        </div>
+                        ${makeWeightSVG('1 g')}
+                    </div>
+                    ${radioHTML('q22', ['2 kg 131 g', '2 kg 106 g', '3 kg 500 g'])}`,
+                    check: () => document.querySelector('input[name="q22"]:checked')?.value === '0',
+                    ansText: '2 kg 131 g (1kg + 1kg + 100g + 30g + 1g = 2kg 131g)'
+                }
+            ]
+        };
+
+        // ── Game State and Engine ────────────────────────────────────────────
+        const GameEngine = (() => {
+            let currentLevel = 1;
+            let currentQIndex = 0;
+            let levelQuestions = [];
+            let score = 0;
+            let answersStatus = [];
+
+            // Load data from localStorage
+            let unlockedLevels = JSON.parse(localStorage.getItem('g3_tcm_unlocked')) || [1];
+
+            function initDashboard() {
+                for (let lv = 1; lv <= 3; lv++) {
+                    const card = document.getElementById(`card-level-${lv}`);
+                    const lockIcon = document.getElementById(`lock-icon-level-${lv}`);
+                    const status = document.getElementById(`status-level-${lv}`);
+
+                    if (unlockedLevels.includes(lv)) {
+                        card.classList.remove('locked');
+                        card.classList.add('unlocked');
+                        if (lockIcon) lockIcon.classList.add('hidden');
+                        
+                        const lvScore = localStorage.getItem(`g3_tcm_lvl_${lv}_score`);
+                        const qCount = lv === 3 ? 8 : 7;
+                        if (lvScore !== null) {
+                            status.innerText = `مكتمل: 💎 ${lvScore} / ${qCount}`;
+                            status.style.background = '#d1fae5';
+                            status.style.color = '#065f46';
+                        } else {
+                            status.innerText = 'جاهز للعب 🔓';
+                            status.style.background = '';
+                            status.style.color = '';
+                        }
+                    } else {
+                        card.classList.add('locked');
+                        card.classList.remove('unlocked');
+                        if (lockIcon) lockIcon.classList.remove('hidden');
+                        status.innerText = 'مغلق 🔒';
+                        status.style.background = '';
+                        status.style.color = '';
+                    }
+                }
+            }
+
+            function startLevel(levelNum) {
+                if (!unlockedLevels.includes(levelNum)) return;
+                currentLevel = levelNum;
+                currentQIndex = 0;
+                score = 0;
+                answersStatus = [];
+                levelQuestions = GAME_DB[`level${levelNum}`];
+
+                const names = ['مستوى الفرسان 🟢', 'مستوى الأبطال 🟡', 'مستوى العباقرة 🔴'];
+                document.getElementById('level-display-name').innerText = names[levelNum - 1];
+
+                showScreen('screen-game');
+                loadQuestion();
+            }
+
+            function loadQuestion() {
+                const q = levelQuestions[currentQIndex];
+                
+                document.getElementById('game-feedback').classList.add('hidden');
+                document.getElementById('btn-check').classList.remove('hidden');
+                document.getElementById('btn-next').classList.add('hidden');
+
+                document.getElementById('stat-progress').innerText = `${currentQIndex + 1} / ${levelQuestions.length}`;
+                document.getElementById('stat-score').innerText = `💎 ${score}`;
+                
+                const percent = ((currentQIndex + 1) / levelQuestions.length) * 100;
+                document.getElementById('stat-progressbar').style.width = `${percent}%`;
+
+                document.getElementById('q-badge-unit').innerText = q.unit;
+                document.getElementById('q-text-content').innerHTML = wrapLtr(q.text);
+                document.getElementById('q-input-area').innerHTML = q.html;
+            }
+
+            function checkAnswer() {
+                const q = levelQuestions[currentQIndex];
+                const feedbackDiv = document.getElementById('game-feedback');
+                const isCorrect = q.check();
+
+                document.getElementById('btn-check').classList.add('hidden');
+                document.getElementById('btn-next').classList.remove('hidden');
+
+                const selectedRadio = document.querySelector('input[name^="q"]:checked');
+                if (selectedRadio) {
+                    const label = selectedRadio.parentElement;
+                    if (isCorrect) {
+                        label.classList.add('correct');
+                    } else {
+                        label.classList.add('incorrect');
+                    }
+                }
+
+                // If incorrect, highlight the correct one
+                if (!isCorrect) {
+                    // Match the correct label index
+                    let correctVal = '0';
+                    if (q.unit === 'قراءة الوقت' && q.text.includes('الساعة أدناه') && q.ansText.includes('16 دقيقة')) correctVal = '0';
+                    else if (q.unit === 'حساب الزمن المنقضي' && q.ansText.includes('5 ساعات')) correctVal = '1';
+                    else if (q.unit === 'قراءة الوقت' && q.text.includes('الساعة أدناه') && q.ansText.includes('20 دقيقة بعد الساعة 1')) correctVal = '1';
+                    else if (q.unit === 'تقدير السعة' && q.ansText.includes('150 mL')) correctVal = '1';
+                    else if (q.unit === 'حسابات السعة' && q.ansText.includes('900 ML')) correctVal = '1';
+                    else if (q.unit === 'حسابات السعة' && q.ansText.includes('7 لترات')) correctVal = '1';
+                    else if (q.unit === 'تقدير الكتلة' && q.ansText.includes('2 kg')) correctVal = '1';
+                    else if (q.unit === 'حساب الكتلة' && q.ansText.includes('2 kg 600g')) correctVal = '2';
+                    else if (q.unit === 'حساب الكتلة' && q.ansText.includes('740 g')) correctVal = '1';
+                    else if (q.unit === 'قراءة الوقت' && q.text.includes('ساعة العقارب') && q.ansText.includes('10:20')) correctVal = '0';
+                    else if (q.unit === 'قراءة الوقت' && q.text.includes('ساعة العقارب') && q.ansText.includes('8:50')) correctVal = '1';
+                    else if (q.unit === 'قراءة الوقت' && q.text.includes('ساعة العقارب') && q.ansText.includes('6:55')) correctVal = '0';
+                    else if (q.unit === 'الصيغة الرقمية للوقت' && q.text.includes('12 دقيقة قبل الظهر')) correctVal = '1';
+                    else if (q.unit === 'الصيغة الرقمية للوقت' && q.text.includes('21 دقيقة بعد الساعة 2')) correctVal = '0';
+                    else if (q.unit === 'الصيغة الرقمية للوقت' && q.text.includes('6 إلا 45 دقيقة')) correctVal = '1';
+                    else if (q.unit === 'الزمن المنقضي' && q.text.includes('6:30 p.m.')) correctVal = '0';
+                    else if (q.unit === 'الزمن المنقضي' && q.text.includes('9:15 a.m.')) correctVal = '0';
+                    else if (q.unit === 'الزمن المنقضي' && q.text.includes('3:30 p.m.')) correctVal = '0';
+                    else if (q.unit === 'وقت النهاية' && q.text.includes('6:10 p.m.')) correctVal = '0';
+                    else if (q.unit === 'وقت النهاية' && q.text.includes('8:20 a.m.')) correctVal = '0';
+                    else if (q.unit === 'وقت النهاية' && q.text.includes('7:30 p.m.')) correctVal = '0';
+                    else if (q.unit === 'حسابات الكتلة الإجمالية') correctVal = '0';
+
+                    const correctRadio = document.querySelector(`input[name^="q"][value="${correctVal}"]`);
+                    if (correctRadio) correctRadio.parentElement.classList.add('correct');
+                }
+
+                if (isCorrect) {
+                    score++;
+                    document.getElementById('stat-score').innerText = `💎 ${score}`;
+                    feedbackDiv.innerHTML = 'أحسنت يا بطل! إجابة صحيحة 🌟';
+                    feedbackDiv.className = 'feedback fb-ok';
+                } else {
+                    feedbackDiv.innerHTML = 'إجابة خاطئة. الإجابة الصحيحة هي: ' + wrapLtr(q.ansText);
+                    feedbackDiv.className = 'feedback fb-err';
+                }
+                feedbackDiv.classList.remove('hidden');
+            }
+
+            function nextQuestion() {
+                currentQIndex++;
+                if (currentQIndex < levelQuestions.length) {
+                    loadQuestion();
+                } else {
+                    finishLevel();
+                }
+            }
+
+            function finishLevel() {
+                const successRate = score / levelQuestions.length;
+                localStorage.setItem(`g3_tcm_lvl_${currentLevel}_score`, score);
+
+                if (successRate >= 0.8) {
+                    if (currentLevel < 3 && !unlockedLevels.includes(currentLevel + 1)) {
+                        unlockedLevels.push(currentLevel + 1);
+                        localStorage.setItem('g3_tcm_unlocked', JSON.stringify(unlockedLevels));
+                    }
+                    
+                    document.getElementById('success-score').innerText = `${score} / ${levelQuestions.length} إجابة صحيحة`;
+                    
+                    if (currentLevel === 3) {
+                        document.getElementById('success-title').innerText = '🏆 عبقري الرياضيات والقياس!';
+                        document.getElementById('success-desc').innerText = 'تهانينا الحارة! لقد أنهيت جميع مستويات التحدي بنجاح وتوجت باللقب النهائي للقياس!';
+                    } else {
+                        document.getElementById('success-title').innerText = 'أداء رائع ونجاح باهر! 🎉';
+                        document.getElementById('success-desc').innerText = 'لقد تجاوزت هذا المستوى بنجاح وفتحت المستوى التالي.';
+                    }
+
+                    showScreen('screen-success');
+                    Confetti.start();
+                } else {
+                    document.getElementById('fail-score').innerText = `${score} / ${levelQuestions.length} إجابة صحيحة`;
+                    showScreen('screen-fail');
+                }
+            }
+
+            function replayLevel() {
+                startLevel(currentLevel);
+            }
+
+            function showMap() {
+                initDashboard();
+                showScreen('screen-map');
+            }
+
+            function resetData() {
+                if (confirm('هل أنت متأكد من مسح جميع درجاتك وإعادة اللعبة من البداية؟')) {
+                    localStorage.removeItem('g3_tcm_unlocked');
+                    localStorage.removeItem('g3_tcm_lvl_1_score');
+                    localStorage.removeItem('g3_tcm_lvl_2_score');
+                    localStorage.removeItem('g3_tcm_lvl_3_score');
+                    unlockedLevels = [1];
+                    showMap();
+                }
+            }
+
+            function showScreen(screenId) {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById(screenId).classList.add('active');
+            }
+
+            return {
+                startLevel,
+                checkAnswer,
+                nextQuestion,
+                replayLevel,
+                showMap,
+                resetData,
+                initDashboard
+            };
+        })();
+
+        // Start initialization
+        GameEngine.initDashboard();
+    </script>
+</body>
+
+</html>
