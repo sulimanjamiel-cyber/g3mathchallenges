@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي الأشكال والمحيط - مدرسة روضة راشد</title>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e1b4b; /* Deep Indigo */
+            --primary-dark: #0f0e26;
+            --accent: #0ea5e9; /* Sky Blue */
+            --accent-dark: #0284c7;
+            --level1-color: #10b981; /* Emerald Green */
+            --level2-color: #f59e0b; /* Amber */
+            --level3-color: #ef4444; /* Rose Red */
+            --bg-gradient: linear-gradient(135deg, #e0f2fe, #f0fdf4);
+            --card-shadow: 0 15px 35px -5px rgba(30, 27, 75, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --radius: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Almarai', 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg-gradient);
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            direction: rtl;
+        }
+
+        /* Header styling */
+        .main-header {
+            background: linear-gradient(135deg, var(--primary), #312e81);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(30, 27, 75, 0.3);
+            border-bottom-left-radius: var(--radius);
+            border-bottom-right-radius: var(--radius);
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-header h1 {
+            margin: 0 0 0.5rem;
+            font-size: 2.2rem;
+            font-weight: 900;
+            font-family: 'Tajawal', sans-serif;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .main-header p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Screen Wrapper */
+        .screen {
+            display: none;
+            width: 100%;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Dashboard Map Layout */
+        .map-banner {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.8rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            border: 2.5px solid #cbd5e1;
+        }
+
+        .map-banner h2 {
+            margin: 0 0 0.6rem;
+            color: var(--primary);
+            font-size: 1.8rem;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 800;
+        }
+
+        .map-banner p {
+            margin: 0;
+            color: #475569;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .level-card {
+            background: var(--glass-bg);
+            border-radius: var(--radius);
+            padding: 2.2rem 1.6rem;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            border: 3.5px solid #cbd5e1;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .level-card.unlocked:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 45px -10px rgba(30, 27, 75, 0.25);
+        }
+
+        .level-card.locked {
+            opacity: 0.65;
+            cursor: not-allowed;
+            background: #e2e8f0;
+        }
+
+        .level-card.level-1 { border-color: var(--level1-color); }
+        .level-card.level-2 { border-color: var(--level2-color); }
+        .level-card.level-3 { border-color: var(--level3-color); }
+
+        .level-badge {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .level-card.level-1 .level-badge { background: var(--level1-color); }
+        .level-card.level-2 .level-badge { background: var(--level2-color); }
+        .level-card.level-3 .level-badge { background: var(--level3-color); }
+        .level-card.locked .level-badge { background: #94a3b8; }
+
+        .level-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .level-desc {
+            font-size: 1rem;
+            color: #475569;
+            margin: 0;
+            line-height: 1.6;
+            flex: 1;
+            font-weight: bold;
+        }
+
+        .level-status {
+            font-weight: 800;
+            font-size: 1.05rem;
+            padding: 0.5rem 1.4rem;
+            border-radius: 999px;
+            margin-top: 0.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .level-card.level-1 .level-status { background: #d1fae5; color: #065f46; }
+        .level-card.level-2 .level-status { background: #fef3c7; color: #92400e; }
+        .level-card.level-3 .level-status { background: #fee2e2; color: #991b1b; }
+        .level-card.locked .level-status { background: #cbd5e1; color: #475569; }
+
+        .lock-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 1.6rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        /* Action Buttons */
+        .btn {
+            font-size: 1.3rem;
+            font-weight: 800;
+            padding: 1rem 2.4rem;
+            border-radius: 18px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-dark); }
+        .btn-success { background: var(--level1-color); color: white; }
+        .btn-success:hover { background: #059669; }
+        .btn-secondary { background: #64748b; color: white; }
+        .btn-secondary:hover { background: #475569; }
+        .btn-warning { background: var(--level2-color); color: white; }
+        .btn-warning:hover { background: #d97706; }
+
+        /* Game Header Bar */
+        .game-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 1.2rem 1.8rem;
+            border-radius: var(--radius);
+            border: 2.5px solid #cbd5e1;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.8rem;
+        }
+
+        .game-bar-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .game-bar-stats {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .stat-badge {
+            font-size: 1.2rem;
+            font-weight: 800;
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 0.5rem 1.2rem;
+            border-radius: 14px;
+            border: 2px solid #bfdbfe;
+        }
+
+        /* Question Layout */
+        .q-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2.2rem;
+            box-shadow: var(--card-shadow);
+            border: 2.5px solid #cbd5e1;
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+
+        .q-badge {
+            position: absolute;
+            top: -14px;
+            right: 28px;
+            font-size: 1rem;
+            font-weight: 800;
+            color: white;
+            padding: 0.4rem 1.4rem;
+            border-radius: 999px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+
+        .q-text {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.6;
+            margin-bottom: 1.8rem;
+            text-align: center;
+        }
+
+        /* Options Buttons Layout (MCQ styled label overrides) */
+        #q-input-area label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.65rem !important;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 14px 24px !important;
+            border: 2.5px solid #cbd5e1 !important;
+            border-radius: 16px !important;
+            background: white !important;
+            width: 100% !important;
+            max-width: 420px !important;
+            margin: 0 auto 12px !important;
+            box-sizing: border-box !important;
+            transition: all 0.2s ease !important;
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            text-align: right;
+        }
+
+        #q-input-area label:hover {
+            border-color: var(--accent) !important;
+            background: #f0f9ff !important;
+            transform: translateY(-2px);
+        }
+
+        #q-input-area label:has(input[type="radio"]:checked) {
+            border-color: var(--accent) !important;
+            background: #e0f2fe !important;
+            color: #0369a1 !important;
+            box-shadow: 0 4px 10px rgba(14, 165, 233, 0.15);
+        }
+
+        #q-input-area label.correct {
+            border-color: var(--level1-color) !important;
+            background: #d1fae5 !important;
+            color: #065f46 !important;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15) !important;
+        }
+
+        #q-input-area label.incorrect {
+            border-color: var(--level3-color) !important;
+            background: #fee2e2 !important;
+            color: #991b1b !important;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.15) !important;
+        }
+
+        #q-input-area label input[type="radio"] {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--accent);
+            cursor: pointer;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        /* SVG drawings container styles */
+        svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Feedback styling */
+        .feedback {
+            margin-top: 1.8rem;
+            padding: 1.4rem 2rem;
+            border-radius: 18px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fb-ok { background: #d1fae5; color: #065f46; border: 3px solid #34d399; }
+        .fb-err { background: #fee2e2; color: #991b1b; border: 3px solid #f87171; }
+
+        /* Game Footer Actions */
+        .game-footer {
+            display: flex;
+            justify-content: flex-start;
+            gap: 1.2rem;
+            margin-top: 1.2rem;
+            padding-top: 1.2rem;
+            border-top: 2.5px solid #e2e8f0;
+        }
+
+        /* Score summary cards */
+        .summary-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            border: 3.5px solid #cbd5e1;
+            max-width: 600px;
+            width: 100%;
+            margin: 2rem auto;
+        }
+
+        .summary-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 0 0 1.2rem;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .summary-score-badge {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--accent-dark);
+            background: #eff6ff;
+            padding: 1.4rem 3.5rem;
+            border-radius: 22px;
+            display: inline-block;
+            border: 3.5px solid #bfdbfe;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 5px 15px rgba(2, 132, 199, 0.1);
+        }
+
+        /* Formats dropdown select style */
+        select {
+            width: 100px;
+            height: 55px;
+            text-align: center;
+            text-align-last: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border: 3px solid #cbd5e1;
+            border-radius: 12px;
+            outline: none;
+            background: #f8fafc;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        }
+
+        select.valid {
+            border-color: var(--level1-color) !important;
+            background-color: #d1fae5 !important;
+            color: #065f46 !important;
+        }
+
+        select.invalid {
+            border-color: var(--level3-color) !important;
+            background-color: #fee2e2 !important;
+            color: #991b1b !important;
+        }
+
+        /* Confetti canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <h1>🏆 تحدي الهندسة والمحيط التفاعلي</h1>
+            <p>الصف الثالث الابتدائي - مدرسة روضة راشد</p>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- 1. MAP DASHBOARD SCREEN -->
+        <section id="screen-map" class="screen active">
+            <div class="map-banner">
+                <h2>أهلاً بك يا بطل الرياضيات في تحدي الأشكال الهندسية والمحيط! 🗺️</h2>
+                <p>تجاوز كل مستوى بنجاح (بنسبة 80% أو أكثر) لفتح المستوى التالي والوصول لمرتبة العباقرة!</p>
+            </div>
+
+            <div class="levels-grid">
+                <!-- Level 1 -->
+                <div class="level-card level-1 unlocked" id="card-level-1" onclick="GameEngine.startLevel(1)">
+                    <div class="level-badge">🟢</div>
+                    <h3 class="level-title">مستوى الفرسان ⚔️</h3>
+                    <p class="level-desc">6 أسئلة أساسية لوصف وتصنيف الأشكال الهندسية ثنائية الأبعاد وخصائصها.</p>
+                    <div class="level-status" id="status-level-1">جاهز للعب 🔓</div>
+                </div>
+
+                <!-- Level 2 -->
+                <div class="level-card level-2 locked" id="card-level-2" onclick="GameEngine.startLevel(2)">
+                    <div class="lock-overlay" id="lock-icon-level-2">🔒</div>
+                    <div class="level-badge">🟡</div>
+                    <h3 class="level-title">مستوى الأبطال 🛡️</h3>
+                    <p class="level-desc">6 مسائل متنوعة لحساب محيط المستطيل، المربع، المثلث، والمضلعات على شبكة المربعات.</p>
+                    <div class="level-status" id="status-level-2">مغلق 🔒</div>
+                </div>
+
+                <!-- Level 3 -->
+                <div class="level-card level-3 locked" id="card-level-3" onclick="GameEngine.startLevel(3)">
+                    <div class="lock-overlay" id="lock-icon-level-3">🔒</div>
+                    <div class="level-badge">🔴</div>
+                    <h3 class="level-title">مستوى العباقرة 🧬</h3>
+                    <p class="level-desc">6 تحديات متقدمة لحساب أطوال الأضلاع المجهولة بمعلومية المحيط.</p>
+                    <div class="level-status" id="status-level-3">مغلق 🔒</div>
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+                <button onclick="GameEngine.resetData()" class="btn btn-secondary">إعادة تعيين التقدم 🔄</button>
+            </div>
+        </section>
+
+        <!-- 2. GAME SCREEN (QUESTIONS) -->
+        <section id="screen-game" class="screen">
+            <div class="game-bar">
+                <div class="game-bar-title" id="level-display-name">المستوى الأول</div>
+                <div class="game-bar-stats">
+                    <span class="stat-badge" id="stat-progress">1 / 6</span>
+                    <span class="stat-badge" id="stat-score">💎 0</span>
+                </div>
+            </div>
+
+            <div style="background:#e2e8f0;border-radius:999px;height:12px;margin-bottom:1.8rem;overflow:hidden">
+                <div id="stat-progressbar" style="height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:999px;transition:width 0.4s ease;width:16%"></div>
+            </div>
+
+            <!-- Content Card -->
+            <div class="q-card">
+                <div class="q-badge" id="q-badge-unit">الهندسة والمحيط</div>
+                <div class="q-text" id="q-text-content">نص السؤال</div>
+                <div id="q-input-area">إدخال السؤال</div>
+            </div>
+
+            <!-- Feedback -->
+            <div id="game-feedback" class="feedback hidden">التغذية الراجعة</div>
+
+            <!-- Game Actions -->
+            <div class="game-footer">
+                <button id="btn-check" class="btn btn-primary" onclick="GameEngine.checkAnswer()">تحقق ✅</button>
+                <button id="btn-next" class="btn btn-success hidden" onclick="GameEngine.nextQuestion()">التالي ➡️</button>
+                <button id="btn-back-map" class="btn btn-secondary" onclick="GameEngine.showMap()">خريطة المستويات 🗺️</button>
+            </div>
+        </section>
+
+        <!-- 3. LEVEL SUCCESS SCREEN -->
+        <section id="screen-success" class="screen">
+            <div class="summary-card">
+                <div style="font-size:5.5rem; margin-bottom:1rem;">🎉</div>
+                <h2 class="summary-title" id="success-title">نجاح باهر!</h2>
+                <p style="font-size:1.4rem; font-weight:bold; color:#4b5563; margin-bottom:1.5rem;" id="success-desc">لقد تجاوزت هذا المستوى بنجاح!</p>
+                <div class="summary-score-badge" id="success-score">0 / 0 نقطة</div>
+                <div style="display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap;">
+                    <button id="btn-success-action" class="btn btn-success" onclick="GameEngine.showMap()">العودة للخريطة 🗺️</button>
+                    <button class="btn btn-secondary" onclick="GameEngine.replayLevel()">إعادة المستوى 🔄</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. LEVEL FAILURE SCREEN -->
+        <section id="screen-fail" class="screen">
+            <div class="summary-card" style="border-color:var(--level3-color);">
+                <div style="font-size:5.5rem; margin-bottom:1rem;">😔</div>
+                <h2 class="summary-title" style="color:var(--level3-color);">لم تحصل على الدرجة المطلوبة</h2>
+                <p style="font-size:1.4rem; font-weight:bold; color:#4b5563; margin-bottom:1.5rem;">تحتاج إلى نسبة 80% على الأقل لفتح المستوى التالي.</p>
+                <div class="summary-score-badge" style="background:#fef2f2; border-color:#fca5a5; color:#991b1b;" id="fail-score">0 / 0 نقطة</div>
+                <div style="display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap;">
+                    <button class="btn btn-warning" onclick="GameEngine.replayLevel()">إعادة المحاولة 🔄</button>
+                    <button class="btn btn-secondary" onclick="GameEngine.showMap()">العودة للخريطة 🗺️</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Canvas for Confetti -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <script>
+        // ── Confetti Particle System ───────────────────────────────
+        const Confetti = (() => {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let animationFrameId = null;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * -canvas.height - 20;
+                    this.rotation = Math.random() * 360;
+                    this.rotationSpeed = Math.random() * 4 - 2;
+                    this.scale = Math.random() * 6 + 6;
+                    this.color = ['#10b981', '#f59e0b', '#ef4444', '#0ea5e9', '#8b5cf6'][Math.floor(Math.random() * 5)];
+                    this.speed = Math.random() * 3 + 4;
+                    this.wobble = Math.random() * 2 - 1;
+                    this.wobbleSpeed = Math.random() * 0.05 + 0.02;
+                    this.wobbleTime = 0;
+                }
+                update() {
+                    this.y += this.speed;
+                    this.rotation += this.rotationSpeed;
+                    this.wobbleTime += this.wobbleSpeed;
+                    this.x += Math.sin(this.wobbleTime) * this.wobble;
+                }
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate((this.rotation * Math.PI) / 180);
+                    ctx.scale(this.scale / 10, this.scale / 10);
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.rect(-10, -5, 20, 10);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            function loop() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p, idx) => {
+                    p.update();
+                    p.draw();
+                    if (p.y > canvas.height) {
+                        particles[idx] = new Particle();
+                    }
+                });
+                animationFrameId = requestAnimationFrame(loop);
+            }
+
+            function start() {
+                resize();
+                particles = Array.from({ length: 100 }, () => new Particle());
+                if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                loop();
+                setTimeout(() => {
+                    cancelAnimationFrame(animationFrameId);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }, 5000);
+            }
+
+            return { start };
+        })();
+
+        // ── Helper HTML Elements Generators ──────────────────────────────────
+        const radioHTML = (name, opts) => 
+            `<div style="display:flex;flex-direction:column;gap:0.8rem;margin:1.5rem 0;align-items:center;width:100%">` + 
+            opts.map((opt, i) => `
+                <label>
+                    <input type="radio" name="${name}" value="${i}">
+                    <span>${opt}</span>
+                </label>
+            `).join('') + `</div>`;
+
+        const selectNum = (id, opts) => 
+            `<div style="display:flex;justify-content:center;align-items:center;gap:15px;margin:2rem 0;font-size:1.8rem;font-weight:bold;">
+                <span>الضلع المجهول = </span>
+                <select id="${id}">
+                    <option value="" disabled selected>?</option>
+                    ${opts.map(o => `<option value="${o}">${o}</option>`).join('')}
+                </select>
+                <span id="unit-label"></span>
+            </div>`;
+
+        const selectPerimeter = (id, opts) => 
+            `<div style="display:flex;justify-content:center;align-items:center;gap:15px;margin:2rem 0;font-size:1.8rem;font-weight:bold;">
+                <span>المحيط = </span>
+                <select id="${id}">
+                    <option value="" disabled selected>?</option>
+                    ${opts.map(o => `<option value="${o}">${o}</option>`).join('')}
+                </select>
+                <span id="unit-label"></span>
+            </div>`;
+
+        // ── Question Database ────────────────────────────────────────────────
+        const GAME_DB = {
+            level1: [
+                {
+                    unit: 'وصف الأشكال',
+                    text: 'ما وجه الشبه بين الأشكال الثلاثة المرسومة أدناه؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;gap:15px;margin:1.5rem 0;background:#f8fafc;padding:15px;border-radius:12px;border:1.5px dashed #cbd5e1;">
+                        <svg width="300" height="80" viewBox="0 0 300 80">
+                            <!-- Shape 1 (quadrilateral) -->
+                            <polygon points="20,55 35,20 70,25 60,60" fill="none" stroke="#1e1b4b" stroke-width="2.5"/>
+                            <!-- Shape 2 (triangle) -->
+                            <polygon points="120,58 145,20 170,58" fill="none" stroke="#1e1b4b" stroke-width="2.5"/>
+                            <!-- Shape 3 (parallelogram) -->
+                            <polygon points="210,55 230,20 280,20 260,55" fill="none" stroke="#1e1b4b" stroke-width="2.5"/>
+                        </svg>
+                    </div>
+                    ${radioHTML('q1', ['جميعها مقعرة', 'جميعها محدبة', 'جميعها أشكال رباعية'])}`,
+                    check: () => document.querySelector('input[name="q1"]:checked')?.value === '1',
+                    ansText: 'جميعها محدبة (كل زواياها تتجه للخارج)'
+                },
+                {
+                    unit: 'وصف الأشكال',
+                    text: 'أي شكل هندسي له 4 زوايا قائمة وجميع أضلاعه متساوية في الطول؟',
+                    type: 'mcq',
+                    html: `
+                    ${radioHTML('q2', [
+                        `<div style="display:inline-flex;align-items:center;gap:15px;">
+                            <span>المربع</span>
+                            <svg width="40" height="40" viewBox="0 0 40 40"><rect x="5" y="5" width="30" height="30" fill="none" stroke="#1e1b4b" stroke-width="2"/></svg>
+                         </div>`,
+                        `<div style="display:inline-flex;align-items:center;gap:15px;">
+                            <span>المستطيل</span>
+                            <svg width="50" height="40" viewBox="0 0 50 40"><rect x="5" y="10" width="40" height="20" fill="none" stroke="#1e1b4b" stroke-width="2"/></svg>
+                         </div>`,
+                        `<div style="display:inline-flex;align-items:center;gap:15px;">
+                            <span>المعين</span>
+                            <svg width="40" height="40" viewBox="0 0 40 40"><polygon points="20,5 35,20 20,35 5,20" fill="none" stroke="#1e1b4b" stroke-width="2"/></svg>
+                         </div>`
+                    ])}`,
+                    check: () => document.querySelector('input[name="q2"]:checked')?.value === '0',
+                    ansText: 'المربع'
+                },
+                {
+                    unit: 'وصف الأشكال',
+                    text: 'ماذا يسمى الشكل الهندسي المرسوم أدناه؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="200" height="80" viewBox="0 0 200 80">
+                            <polygon points="40,60 70,20 130,20 160,60" fill="none" stroke="#7c3aed" stroke-width="3"/>
+                        </svg>
+                    </div>
+                    ${radioHTML('q3', ['مستطيل', 'شبه منحرف', 'متوازي الأضلاع'])}`,
+                    check: () => document.querySelector('input[name="q3"]:checked')?.value === '1',
+                    ansText: 'شبه منحرف'
+                },
+                {
+                    unit: 'وصف الأشكال',
+                    text: 'اختر الخاصية التي تميز المستطيل المرسوم أدناه:',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="200" height="85" viewBox="0 0 200 85">
+                            <rect x="40" y="20" width="120" height="45" fill="none" stroke="#e11d48" stroke-width="3"/>
+                        </svg>
+                    </div>
+                    ${radioHTML('q4', ['له زوج واحد فقط من الأضلاع المتوازية', 'جميع أضلاعه متساوية في الطول', 'له أربع زوايا قائمة'])}`,
+                    check: () => document.querySelector('input[name="q4"]:checked')?.value === '2',
+                    ansText: 'أربع زوايا قائمة'
+                },
+                {
+                    unit: 'تصنيف الأشكال',
+                    text: 'أي من الأشكال التالية له زوج واحد فقط من الأضلاع المتوازية؟',
+                    type: 'mcq',
+                    html: `
+                    ${radioHTML('q5', [
+                        `<div style="display:inline-flex;align-items:center;gap:15px;">
+                            <span>المعين</span>
+                            <svg width="40" height="40" viewBox="0 0 40 40"><polygon points="20,5 35,20 20,35 5,20" fill="none" stroke="black" stroke-width="2"/></svg>
+                         </div>`,
+                        `<div style="display:inline-flex;align-items:center;gap:15px;">
+                            <span>شبه المنحرف</span>
+                            <svg width="50" height="40" viewBox="0 0 50 40"><polygon points="10,32 18,8 32,8 40,32" fill="none" stroke="black" stroke-width="2"/></svg>
+                         </div>`,
+                        `<div style="display:inline-flex;align-items:center;gap:15px;">
+                            <span>المربع</span>
+                            <svg width="40" height="40" viewBox="0 0 40 40"><rect x="8" y="8" width="24" height="24" fill="none" stroke="black" stroke-width="2"/></svg>
+                         </div>`
+                    ])}`,
+                    check: () => document.querySelector('input[name="q5"]:checked')?.value === '1',
+                    ansText: 'شبه المنحرف'
+                },
+                {
+                    unit: 'وصف الأشكال',
+                    text: 'كل أضلاعي متساوية في الطول، ولكن ليس لي زوايا قائمة. فمن أنا؟',
+                    type: 'mcq',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="120" height="120" viewBox="0 0 120 120">
+                            <polygon points="60,15 100,60 60,105 20,60" fill="none" stroke="#059669" stroke-width="3"/>
+                        </svg>
+                    </div>
+                    ${radioHTML('q6', ['المستطيل', 'المعين', 'شبه المنحرف'])}`,
+                    check: () => document.querySelector('input[name="q6"]:checked')?.value === '1',
+                    ansText: 'المعين'
+                }
+            ],
+            level2: [
+                {
+                    unit: 'محيط الأشكال المعروفة',
+                    text: 'ما محيط المستطيل المرسوم أدناه؟',
+                    type: 'select',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="220" height="110" viewBox="0 0 220 110">
+                            <rect x="40" y="25" width="140" height="60" fill="none" stroke="#2563eb" stroke-width="3"/>
+                            <text x="110" y="17" text-anchor="middle" direction="ltr" font-weight="bold" font-size="16" fill="#1e293b">5 m</text>
+                            <text x="20" y="60" text-anchor="middle" direction="ltr" font-weight="bold" font-size="16" fill="#1e293b">2 m</text>
+                        </svg>
+                    </div>
+                    ${selectPerimeter('q7', [7, 10, 14, 20])}`,
+                    setup: () => document.getElementById('unit-label').innerText = 'm',
+                    check: () => document.getElementById('q7').value === '14',
+                    ansText: '14 m (المحيط = 5 + 2 + 5 + 2 = 14)'
+                },
+                {
+                    unit: 'محيط الأشكال المعروفة',
+                    text: 'ما محيط المثلث متطابق الأضلاع المرسوم أدناه؟',
+                    type: 'select',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="160" height="130" viewBox="0 0 160 130">
+                            <polygon points="80,20 25,110 135,110" fill="none" stroke="#ea580c" stroke-width="3"/>
+                            <text x="122" y="62" text-anchor="start" direction="ltr" font-weight="bold" font-size="16" fill="#1e293b">3 cm</text>
+                        </svg>
+                    </div>
+                    ${selectPerimeter('q8', [3, 6, 9, 12])}`,
+                    setup: () => document.getElementById('unit-label').innerText = 'cm',
+                    check: () => document.getElementById('q8').value === '9',
+                    ansText: '9 cm (المحيط = 3 + 3 + 3 = 9)'
+                },
+                {
+                    unit: 'محيط الأشكال المعروفة',
+                    text: 'ما محيط متوازي الأضلاع المرسوم أدناه؟',
+                    type: 'select',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="220" height="110" viewBox="0 0 220 110">
+                            <polygon points="40,85 65,30 175,30 150,85" fill="none" stroke="#0891b2" stroke-width="3"/>
+                            <text x="120" y="20" text-anchor="middle" direction="ltr" font-weight="bold" font-size="16" fill="#1e293b">8 m</text>
+                            <text x="35" y="60" text-anchor="end" direction="ltr" font-weight="bold" font-size="16" fill="#1e293b">4 m</text>
+                        </svg>
+                    </div>
+                    ${selectPerimeter('q9', [12, 24, 32, 40])}`,
+                    setup: () => document.getElementById('unit-label').innerText = 'm',
+                    check: () => document.getElementById('q9').value === '24',
+                    ansText: '24 m (المحيط = 8 + 4 + 8 + 4 = 24)'
+                },
+                {
+                    unit: 'فهم المحيط',
+                    text: 'ما محيط المضلع المظلل أدناه باللون الأزرق على شبكة المربعات (مقياس الرسم: 1 cm)؟',
+                    type: 'select',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="230" height="180" viewBox="0 0 230 180" style="background:white; border:1px solid #cbd5e1; border-radius:12px;">
+                            <!-- Draw grid lines -->
+                            <g stroke="#e2e8f0" stroke-width="1">
+                                <line x1="20" y1="0" x2="20" y2="180"/>
+                                <line x1="44" y1="0" x2="44" y2="180"/>
+                                <line x1="68" y1="0" x2="68" y2="180"/>
+                                <line x1="92" y1="0" x2="92" y2="180"/>
+                                <line x1="116" y1="0" x2="116" y2="180"/>
+                                <line x1="140" y1="0" x2="140" y2="180"/>
+                                <line x1="164" y1="0" x2="164" y2="180"/>
+                                <line x1="188" y1="0" x2="188" y2="180"/>
+                                <line x1="212" y1="0" x2="212" y2="180"/>
+                                
+                                <line x1="0" y1="20" x2="230" y2="20"/>
+                                <line x1="0" y1="44" x2="230" y2="44"/>
+                                <line x1="0" y1="68" x2="230" y2="68"/>
+                                <line x1="0" y1="92" x2="230" y2="92"/>
+                                <line x1="0" y1="116" x2="230" y2="116"/>
+                                <line x1="0" y1="140" x2="230" y2="140"/>
+                                <line x1="0" y1="164" x2="230" y2="164"/>
+                            </g>
+                            <!-- Shape path -->
+                            <path d="M44,140 L188,140 L188,20 L164,20 L164,116 L92,116 L92,92 L44,92 Z" fill="#eff6ff" fill-opacity="0.6" stroke="#2563eb" stroke-width="3"/>
+                            <text x="115" y="160" text-anchor="middle" font-size="12" font-weight="bold" fill="#64748b">المقياس: <tspan direction="ltr" unicode-bidi="embed">1 cm</tspan></text>
+                        </svg>
+                    </div>
+                    ${selectPerimeter('q10', [12, 20, 24, 28])}`,
+                    setup: () => document.getElementById('unit-label').innerText = 'cm',
+                    check: () => document.getElementById('q10').value === '24',
+                    ansText: '24 cm (بعد عدّ طول الخط الخارجي للمضلع: 6 + 5 + 1 + 3 + 3 + 1 + 2 + 3 = 24)'
+                },
+                {
+                    unit: 'فهم المحيط',
+                    text: 'أوجد محيط الشكل T الموضح باللون الأخضر على شبكة المربعات (مقياس الرسم: 1 cm):',
+                    type: 'select',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="210" height="160" viewBox="0 0 210 160" style="background:white; border:1px solid #cbd5e1; border-radius:12px;">
+                            <!-- Draw grid lines -->
+                            <g stroke="#e2e8f0" stroke-width="1">
+                                <line x1="20" y1="0" x2="20" y2="160"/>
+                                <line x1="44" y1="0" x2="44" y2="160"/>
+                                <line x1="68" y1="0" x2="68" y2="160"/>
+                                <line x1="92" y1="0" x2="92" y2="160"/>
+                                <line x1="116" y1="0" x2="116" y2="160"/>
+                                <line x1="140" y1="0" x2="140" y2="160"/>
+                                <line x1="164" y1="0" x2="164" y2="160"/>
+                                <line x1="188" y1="0" x2="188" y2="160"/>
+                                
+                                <line x1="0" y1="20" x2="210" y2="20"/>
+                                <line x1="0" y1="44" x2="210" y2="44"/>
+                                <line x1="0" y1="68" x2="210" y2="68"/>
+                                <line x1="0" y1="92" x2="210" y2="92"/>
+                                <line x1="0" y1="116" x2="210" y2="116"/>
+                                <line x1="0" y1="140" x2="210" y2="140"/>
+                            </g>
+                            <!-- Shape path -->
+                            <path d="M44,20 L140,20 L140,44 L116,44 L116,116 L68,116 L68,44 L44,44 Z" fill="#f0fdf4" fill-opacity="0.6" stroke="#16a34a" stroke-width="3"/>
+                            <text x="105" y="145" text-anchor="middle" font-size="12" font-weight="bold" fill="#64748b">المقياس: <tspan direction="ltr" unicode-bidi="embed">1 cm</tspan></text>
+                        </svg>
+                    </div>
+                    ${selectPerimeter('q11', [11, 13, 14, 16])}`,
+                    setup: () => document.getElementById('unit-label').innerText = 'cm',
+                    check: () => document.getElementById('q11').value === '16',
+                    ansText: '16 cm (عدّ الخط الخارجي: 4 + 1 + 1 + 3 + 2 + 3 + 1 + 1 = 16)'
+                },
+                {
+                    unit: 'فهم المحيط',
+                    text: 'أوجد محيط الشكل الخماسي الموضح أدناه:',
+                    type: 'select',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="220" height="140" viewBox="0 0 220 140">
+                            <polygon points="50,60 110,25 180,60 150,110 70,100" fill="none" stroke="#7c3aed" stroke-width="3"/>
+                            <text x="68" y="32" text-anchor="middle" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">3 m</text>
+                            <text x="152" y="32" text-anchor="middle" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">7 m</text>
+                            <text x="178" y="90" text-anchor="start" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">2 m</text>
+                            <text x="110" y="125" text-anchor="middle" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">4 m</text>
+                            <text x="42" y="85" text-anchor="end" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">6 m</text>
+                        </svg>
+                    </div>
+                    ${selectPerimeter('q12', [15, 20, 22, 25])}`,
+                    setup: () => document.getElementById('unit-label').innerText = 'm',
+                    check: () => document.getElementById('q12').value === '22',
+                    ansText: '22 m (المحيط = 7 + 2 + 4 + 6 + 3 = 22)'
+                }
+            ],
+            level3: [
+                {
+                    unit: 'المحيط والأطوال المجهولة',
+                    text: 'أوجد طول الضلع المجهول b في المثلث أدناه إذا كان المحيط الإجمالي يساوي 30 cm:',
+                    type: 'select',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="200" height="130" viewBox="0 0 200 130">
+                            <polygon points="40,20 40,100 150,100" fill="none" stroke="#dc2626" stroke-width="3"/>
+                            <text x="32" y="65" text-anchor="end" direction="ltr" font-weight="bold" font-size="16" fill="#1e293b">5 cm</text>
+                            <text x="105" y="48" text-anchor="start" direction="ltr" font-weight="bold" font-size="16" fill="#1e293b">13 cm</text>
+                            <text x="95" y="120" text-anchor="middle" direction="ltr" font-weight="bold" font-size="16" fill="#dc2626">b cm</text>
+                        </svg>
+                    </div>
+                    ${selectNum('q13', [8, 10, 12, 15, 18])}`,
+                    setup: () => document.getElementById('unit-label').innerText = 'cm',
+                    check: () => document.getElementById('q13').value === '12',
+                    ansText: '12 cm (طول الضلع المجهول b = 30 - 5 - 13 = 12)'
+                },
+                {
+                    unit: 'المحيط والأطوال المجهولة',
+                    text: 'أوجد طول الضلع المجهول x في الشكل الرباعي أدناه إذا كان المحيط الإجمالي يساوي 29 cm:',
+                    type: 'select',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="220" height="110" viewBox="0 0 220 110">
+                            <polygon points="40,85 55,30 165,30 185,85" fill="none" stroke="#2563eb" stroke-width="3"/>
+                            <text x="110" y="20" text-anchor="middle" direction="ltr" font-weight="bold" font-size="16" fill="#1e293b">8 cm</text>
+                            <text x="182" y="60" text-anchor="start" direction="ltr" font-weight="bold" font-size="16" fill="#1e293b">3 cm</text>
+                            <text x="110" y="102" text-anchor="middle" direction="ltr" font-weight="bold" font-size="16" fill="#1e293b">12 cm</text>
+                            <text x="32" y="60" text-anchor="end" direction="ltr" font-weight="bold" font-size="16" fill="#2563eb">x cm</text>
+                        </svg>
+                    </div>
+                    ${selectNum('q14', [4, 6, 8, 10, 11])}`,
+                    setup: () => document.getElementById('unit-label').innerText = 'cm',
+                    check: () => document.getElementById('q14').value === '6',
+                    ansText: '6 cm (طول الضلع المجهول x = 29 - (8 + 3 + 12) = 6)'
+                },
+                {
+                    unit: 'المحيط والأطوال المجهولة',
+                    text: 'أوجد طول الضلع المجهول s في الشكل الخماسي (بيت) إذا كان المحيط الإجمالي يساوي 55 m:',
+                    type: 'select',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="180" height="140" viewBox="0 0 180 140">
+                            <path d="M50,110 L50,60 L90,20 L130,60 L130,110 Z" fill="none" stroke="#059669" stroke-width="3"/>
+                            <text x="60" y="30" text-anchor="middle" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">9 m</text>
+                            <text x="120" y="30" text-anchor="middle" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">9 m</text>
+                            <text x="42" y="90" text-anchor="end" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">11 m</text>
+                            <text x="138" y="90" text-anchor="start" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">11 m</text>
+                            <text x="90" y="128" text-anchor="middle" direction="ltr" font-weight="bold" font-size="15" fill="#059669">s m</text>
+                        </svg>
+                    </div>
+                    ${selectNum('q15', [10, 12, 14, 15, 20])}`,
+                    setup: () => document.getElementById('unit-label').innerText = 'm',
+                    check: () => document.getElementById('q15').value === '15',
+                    ansText: '15 m (طول الضلع المجهول s = 55 - (9 + 9 + 11 + 11) = 15)'
+                },
+                {
+                    unit: 'المحيط والأطوال المجهولة',
+                    text: 'أوجد طول الضلع المجهول n في المثلث أدناه إذا كان المحيط الإجمالي يساوي 24 cm:',
+                    type: 'select',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="180" height="120" viewBox="0 0 180 120">
+                            <polygon points="40,20 40,100 140,100" fill="none" stroke="#2563eb" stroke-width="3"/>
+                            <text x="32" y="65" text-anchor="end" direction="ltr" font-weight="bold" font-size="16" fill="#1e293b">6 cm</text>
+                            <text x="90" y="118" text-anchor="middle" direction="ltr" font-weight="bold" font-size="16" fill="#1e293b">8 cm</text>
+                            <text x="100" y="52" text-anchor="start" direction="ltr" font-weight="bold" font-size="16" fill="#2563eb">n cm</text>
+                        </svg>
+                    </div>
+                    ${selectNum('q16', [5, 8, 10, 12, 14])}`,
+                    setup: () => document.getElementById('unit-label').innerText = 'cm',
+                    check: () => document.getElementById('q16').value === '10',
+                    ansText: '10 cm (طول الضلع المجهول n = 24 - 6 - 8 = 10)'
+                },
+                {
+                    unit: 'المحيط والأطوال المجهولة',
+                    text: 'أوجد طول الضلع المجهول x في الشكل أدناه إذا كان المحيط الإجمالي يساوي 30 m:',
+                    type: 'select',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="200" height="120" viewBox="0 0 200 120">
+                            <polygon points="40,100 40,55 85,20 155,100" fill="none" stroke="#7c3aed" stroke-width="3"/>
+                            <text x="32" y="80" text-anchor="end" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">4 m</text>
+                            <text x="132" y="50" text-anchor="start" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">9 m</text>
+                            <text x="97.5" y="118" text-anchor="middle" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">12 m</text>
+                            <text x="54" y="28" text-anchor="end" direction="ltr" font-weight="bold" font-size="15" fill="#7c3aed">x m</text>
+                        </svg>
+                    </div>
+                    ${selectNum('q17', [3, 5, 7, 9, 10])}`,
+                    setup: () => document.getElementById('unit-label').innerText = 'm',
+                    check: () => document.getElementById('q17').value === '5',
+                    ansText: '5 m (طول الضلع المجهول x = 30 - (4 + 12 + 9) = 5)'
+                },
+                {
+                    unit: 'المحيط والأطوال المجهولة',
+                    text: 'أوجد طول الضلع المجهول x في شبه المنحرف أدناه إذا كان المحيط الإجمالي يساوي 37 m:',
+                    type: 'select',
+                    html: `
+                    <div style="display:flex;justify-content:center;margin:1.5rem 0;">
+                        <svg width="200" height="100" viewBox="0 0 200 100">
+                            <polygon points="40,30 160,30 130,80 70,80" fill="none" stroke="#0ea5e9" stroke-width="3"/>
+                            <text x="100" y="20" text-anchor="middle" direction="ltr" font-weight="bold" font-size="15" fill="#0ea5e9">x m</text>
+                            <text x="155" y="60" text-anchor="start" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">9 m</text>
+                            <text x="100" y="96" text-anchor="middle" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">5 m</text>
+                            <text x="45" y="60" text-anchor="end" direction="ltr" font-weight="bold" font-size="15" fill="#1e293b">9 m</text>
+                        </svg>
+                    </div>
+                    ${selectNum('q18', [10, 12, 14, 15, 16])}`,
+                    setup: () => document.getElementById('unit-label').innerText = 'm',
+                    check: () => document.getElementById('q18').value === '14',
+                    ansText: '14 m (طول الضلع المجهول x = 37 - (9 + 5 + 9) = 14)'
+                }
+            ]
+        };
+
+        // ── Game State and Engine ────────────────────────────────────────────
+        const GameEngine = (() => {
+            let currentLevel = 1;
+            let currentQIndex = 0;
+            let levelQuestions = [];
+            let score = 0;
+            let answersStatus = [];
+
+            // Load data from localStorage
+            let unlockedLevels = JSON.parse(localStorage.getItem('g3_geo_unlocked')) || [1];
+
+            function initDashboard() {
+                // Update map UI locks
+                for (let lv = 1; lv <= 3; lv++) {
+                    const card = document.getElementById(`card-level-${lv}`);
+                    const lockIcon = document.getElementById(`lock-icon-level-${lv}`);
+                    const status = document.getElementById(`status-level-${lv}`);
+
+                    if (unlockedLevels.includes(lv)) {
+                        card.classList.remove('locked');
+                        card.classList.add('unlocked');
+                        if (lockIcon) lockIcon.classList.add('hidden');
+                        
+                        const lvScore = localStorage.getItem(`g3_geo_lvl_${lv}_score`);
+                        if (lvScore !== null) {
+                            status.innerText = `مكتمل: 💎 ${lvScore} / 6`;
+                            status.style.background = '#d1fae5';
+                            status.style.color = '#065f46';
+                        } else {
+                            status.innerText = 'جاهز للعب 🔓';
+                            status.style.background = '';
+                            status.style.color = '';
+                        }
+                    } else {
+                        card.classList.add('locked');
+                        card.classList.remove('unlocked');
+                        if (lockIcon) lockIcon.classList.remove('hidden');
+                        status.innerText = 'مغلق 🔒';
+                        status.style.background = '';
+                        status.style.color = '';
+                    }
+                }
+            }
+
+            function startLevel(levelNum) {
+                if (!unlockedLevels.includes(levelNum)) return;
+                currentLevel = levelNum;
+                currentQIndex = 0;
+                score = 0;
+                answersStatus = [];
+                levelQuestions = GAME_DB[`level${levelNum}`];
+
+                const names = ['مستوى الفرسان 🟢', 'مستوى الأبطال 🟡', 'مستوى العباقرة 🔴'];
+                document.getElementById('level-display-name').innerText = names[levelNum - 1];
+
+                showScreen('screen-game');
+                loadQuestion();
+            }
+
+            function loadQuestion() {
+                const q = levelQuestions[currentQIndex];
+                
+                document.getElementById('game-feedback').classList.add('hidden');
+                document.getElementById('btn-check').classList.remove('hidden');
+                document.getElementById('btn-next').classList.add('hidden');
+
+                document.getElementById('stat-progress').innerText = `${currentQIndex + 1} / ${levelQuestions.length}`;
+                document.getElementById('stat-score').innerText = `💎 ${score}`;
+                
+                const percent = ((currentQIndex + 1) / levelQuestions.length) * 100;
+                document.getElementById('stat-progressbar').style.width = `${percent}%`;
+
+                document.getElementById('q-badge-unit').innerText = q.unit;
+                document.getElementById('q-text-content').innerText = q.text;
+                document.getElementById('q-input-area').innerHTML = q.html;
+
+                if (q.setup) q.setup();
+            }
+
+            function checkAnswer() {
+                const q = levelQuestions[currentQIndex];
+                const feedbackDiv = document.getElementById('game-feedback');
+                const isCorrect = q.check();
+
+                document.getElementById('btn-check').classList.add('hidden');
+                document.getElementById('btn-next').classList.remove('hidden');
+
+                if (q.type === 'mcq') {
+                    const selectedRadio = document.querySelector('input[name^="q"]:checked');
+                    if (selectedRadio) {
+                        const label = selectedRadio.parentElement;
+                        if (isCorrect) {
+                            label.classList.add('correct');
+                        } else {
+                            label.classList.add('incorrect');
+                            let correctIdx = 0;
+                            if (q.ansText.includes('محدبة')) correctIdx = 1;
+                            else if (q.ansText.includes('شبه منحرف')) correctIdx = 1;
+                            else if (q.ansText.includes('قائمة')) correctIdx = 2;
+                            else if (q.ansText.includes('شبه المنحرف')) correctIdx = 1;
+                            else if (q.ansText.includes('المعين')) correctIdx = 1;
+                            
+                            const correctRadio = document.querySelector(`input[name^="q"][value="${correctIdx}"]`);
+                            if (correctRadio) correctRadio.parentElement.classList.add('correct');
+                        }
+                    }
+                } else if (q.type === 'select') {
+                    const select = document.querySelector('select');
+                    if (select) {
+                        if (isCorrect) {
+                            select.classList.add('valid');
+                        } else {
+                            select.classList.add('invalid');
+                        }
+                    }
+                }
+
+                if (isCorrect) {
+                    score++;
+                    document.getElementById('stat-score').innerText = `💎 ${score}`;
+                    feedbackDiv.innerText = 'أحسنت يا بطل! إجابة صحيحة 🌟';
+                    feedbackDiv.className = 'feedback fb-ok';
+                } else {
+                    feedbackDiv.innerText = `إجابة خاطئة. الإجابة الصحيحة هي: ${q.ansText}`;
+                    feedbackDiv.className = 'feedback fb-err';
+                }
+                feedbackDiv.classList.remove('hidden');
+            }
+
+            function nextQuestion() {
+                currentQIndex++;
+                if (currentQIndex < levelQuestions.length) {
+                    loadQuestion();
+                } else {
+                    finishLevel();
+                }
+            }
+
+            function finishLevel() {
+                const successRate = score / levelQuestions.length;
+                localStorage.setItem(`g3_geo_lvl_${currentLevel}_score`, score);
+
+                if (successRate >= 0.8) {
+                    if (currentLevel < 3 && !unlockedLevels.includes(currentLevel + 1)) {
+                        unlockedLevels.push(currentLevel + 1);
+                        localStorage.setItem('g3_geo_unlocked', JSON.stringify(unlockedLevels));
+                    }
+                    
+                    document.getElementById('success-score').innerText = `${score} / ${levelQuestions.length} إجابة صحيحة`;
+                    
+                    if (currentLevel === 3) {
+                        document.getElementById('success-title').innerText = '🏆 عبقري الرياضيات والمحيط!';
+                        document.getElementById('success-desc').innerText = 'تهانينا الحارة! لقد أنهيت جميع مستويات التحدي بنجاح وتوجت باللقب النهائي!';
+                    } else {
+                        document.getElementById('success-title').innerText = 'أداء رائع ونجاح باهر! 🎉';
+                        document.getElementById('success-desc').innerText = 'لقد تجاوزت هذا المستوى بنجاح وفتحت المستوى التالي.';
+                    }
+
+                    showScreen('screen-success');
+                    Confetti.start();
+                } else {
+                    document.getElementById('fail-score').innerText = `${score} / ${levelQuestions.length} إجابة صحيحة`;
+                    showScreen('screen-fail');
+                }
+            }
+
+            function replayLevel() {
+                startLevel(currentLevel);
+            }
+
+            function showMap() {
+                initDashboard();
+                showScreen('screen-map');
+            }
+
+            function resetData() {
+                if (confirm('هل أنت متأكد من مسح جميع درجاتك وإعادة اللعبة من البداية؟')) {
+                    localStorage.removeItem('g3_geo_unlocked');
+                    localStorage.removeItem('g3_geo_lvl_1_score');
+                    localStorage.removeItem('g3_geo_lvl_2_score');
+                    localStorage.removeItem('g3_geo_lvl_3_score');
+                    unlockedLevels = [1];
+                    showMap();
+                }
+            }
+
+            function showScreen(screenId) {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById(screenId).classList.add('active');
+            }
+
+            return {
+                startLevel,
+                checkAnswer,
+                nextQuestion,
+                replayLevel,
+                showMap,
+                resetData,
+                initDashboard
+            };
+        })();
+
+        // Start initialization
+        GameEngine.initDashboard();
+    </script>
+</body>
+
+</html>
